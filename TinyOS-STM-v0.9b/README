@@ -1,0 +1,10 @@
+TinyOS port to STM32F103
+
+Assumes you have installed at /home/my_username/TinyOS-STM
+else please edit tinyos.sh
+
+CodeSourcery G++ Lite installer should add itself to your PATH
+if not please add in .profile e.g.
+export PATH=$PATH::~/CodeSourcery/Sourcery_G++_Lite/bin
+
+Latest compiler binaries will be added to repo in a future commit.

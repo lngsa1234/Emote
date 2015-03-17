@@ -1,0 +1,22 @@
+mkdir -p build/emote
+cd /mnt/shared/TinyOS-STM-v0.9b/tos/platforms/emote/vectors; make;
+make[1]: Entering directory `/mnt/shared/TinyOS-STM-v0.9b/tos/platforms/emote/vectors'
+make[1]: Nothing to be done for `all'.
+make[1]: Leaving directory `/mnt/shared/TinyOS-STM-v0.9b/tos/platforms/emote/vectors'
+cd /mnt/shared/TinyOS-STM-v0.9b/tos/chips/stm32/fwlib; make;
+make[1]: Entering directory `/mnt/shared/TinyOS-STM-v0.9b/tos/chips/stm32/fwlib'
+make[1]: Nothing to be done for `all'.
+make[1]: Leaving directory `/mnt/shared/TinyOS-STM-v0.9b/tos/chips/stm32/fwlib'
+cd /mnt/shared/TinyOS-STM-v0.9b/tos/chips/stm32/usb-serial; make;
+make[1]: Entering directory `/mnt/shared/TinyOS-STM-v0.9b/tos/chips/stm32/usb-serial'
+make[1]: Nothing to be done for `all'.
+make[1]: Leaving directory `/mnt/shared/TinyOS-STM-v0.9b/tos/chips/stm32/usb-serial'
+cd /mnt/shared/TinyOS-STM-v0.9b/tos/chips/stm32/uart-serial; make;
+make[1]: Entering directory `/mnt/shared/TinyOS-STM-v0.9b/tos/chips/stm32/uart-serial'
+make[1]: Nothing to be done for `all'.
+make[1]: Leaving directory `/mnt/shared/TinyOS-STM-v0.9b/tos/chips/stm32/uart-serial'
+    compiling UartAppC to a emote binary
+ncc -o build/emote/main.exe -Os -Wall -Wshadow -Wnesc-all -target=emote -fnesc-cfile=build/emote/app.c -L/mnt/shared/TinyOS-STM-v0.9b/tos/platforms/emote/vectors -L/mnt/shared/TinyOS-STM-v0.9b/tos/platforms/emote -L/mnt/shared/TinyOS-STM-v0.9b/tos/chips/stm32/fwlib -L/mnt/shared/TinyOS-STM-v0.9b/tos/chips/stm32/usb-serial -L/mnt/shared/TinyOS-STM-v0.9b/tos/chips/stm32/uart-serial -DDEFINED_TOS_AM_GROUP=0x22 -fnesc-separator=__ -DIDENT_APPNAME=\"UartAppC\" -DIDENT_USERNAME=\"lynn\" -DIDENT_HOSTNAME=\"lynn-VirtualBox\" -DIDENT_USERHASH=0xf59313abL -DIDENT_TIMESTAMP=0x54e357b2L -DIDENT_UIDHASH=0xc81da454L -DSTM32 -T/mnt/shared/TinyOS-STM-v0.9b/tos/platforms/emote/tos.x  -mcpu=cortex-m3 -mthumb -g -O1 -fnesc-no-inline  UartAppC.nc -lm -lvectors-stm32 -lstm32fw -lstm32-usbserial -lstm32-uartserial /mnt/shared/TinyOS-STM-v0.9b/tos/platforms/emote/vectors/stm32-vector.o -I/mnt/shared/TinyOS-STM-v0.9b/tos/platforms/emote -L/mnt/shared/TinyOS-STM-v0.9b/tos/platforms/emote/vectors -L/mnt/shared/TinyOS-STM-v0.9b/tos/platforms/emote -L/mnt/shared/TinyOS-STM-v0.9b/tos/chips/stm32/fwlib -L/mnt/shared/TinyOS-STM-v0.9b/tos/chips/stm32/usb-serial -L/mnt/shared/TinyOS-STM-v0.9b/tos/chips/stm32/uart-serial  
+    compiled UartAppC to build/emote/main.exe
+           10404 bytes in ROM
+             100 bytes in RAM
