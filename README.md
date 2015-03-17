@@ -1,19 +1,19 @@
 # emote
 STM32 embedded development. Include flash programming in Linux, bootloader on STM32 board, Tinyos v2.1 supporting STM32 and Keil Project.
 
-The uart component and its driver are added.
+This project is to support tinyos download from bootloader. 
 
-you can run the commands below and get the main.exe.
-$ cd ~/\TinyOS-STM-v0.9b\apps\UsartSerialTest
-$ make emote.
+Two main parts are included: emoteflash and emote bootloader.
 
-If you have your own tinyos, you can followe the steps below.
+Emoteflash runs in Linux enrionment. It functions like a flash programming.
 
-1. copy ~\TinyOS-STM-v0.9b\tos\chips\stm32\usb-serial to the corresponding dir of your tinyos.
-2. make revision to HplSTM32InterruptM.nc(comment USART1_IRQHandler(). Tis funtion is redefined in uart component)
-3. make revision to ~\TinyOS-STM-v0.9b\tos\platforms\emote\tos.x(add compiler path)
-4. cope ~\TinyOS-STM-v0.9b\apps\UsartSerialTest to your corresponding dir.
-$ cd ~/\TinyOS-STM-v0.9b\apps\UsartSerialTest
-$ make emote.
+Emote bootloader is a Keil Project. The bootloader program can be directly downloaded to board by keil via JTAG.
 
-Note: only the uart component is tested.  
+In order to support debugging, you have two options: using serial port or using keil.
+
+TinyOS-STM-v0.9b is a linux based sourece code. Uart component is added into this code. 
+You can use uart component to debug your code with serail port.
+
+Tinyos-stm32-keil is a keil project. It supports debugging tinyos via keil. You can compile your tinyos code in Linux first. 
+Then use the appmangle.pl script (included in TinyOS-STM-v0.9b)to convert app.c into the format supported by Keil. Then use keil
+to debug your tinyos.  
