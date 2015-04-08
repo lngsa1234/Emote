@@ -49,22 +49,32 @@ int SerialInt(char *device)
 
 int SerialGetChar(char * c)
 {
-	return serial_read(h,c,1);
+    return serial_read(h,c,1);
+
 }
 
 int SerialPutChar(const char c)
-{
-	return serial_write(h,(void *)&c,1);
+{ 
+    int cnt;
+    cnt = serial_write(h,(void *)&c,1);
+    if(cnt != 1)
+     printf("write serial one byte ailed...");
+    return cnt;
 }
 
 int SerialRead(void *buf,size_t nbyte)
 {
-	return serial_read(h,buf,nbyte);
+       return serial_read(h,buf,nbyte);
+
 }
 
 int SerialWrite(const void *buf,size_t nbyte)
 {
-	return serial_write(h,(void *)buf,nbyte);
+	int cnt;
+        cnt = serial_write(h,(void *)buf,nbyte);
+        if(cnt!=nbyte)
+          printf("write serial %d bytes failed...",nbyte);
+        return cnt;
 }
 
 void SerialClose()

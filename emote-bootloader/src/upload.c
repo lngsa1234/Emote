@@ -40,10 +40,11 @@
 void SerialUpload(void)
 {
   uint32_t status = 0; 
+	uint8_t key;
 
   SerialPutString("\n\n\rSelect Receive File ... (press any key to abort)\n\r");
 
-  if (GetKey() == CRC16)
+  if (Serial_ReceiveByte(&key,-1) && key == CRC16)
   {
     /* Transmit the flash image through ymodem protocol */
     status = Ymodem_Transmit((uint8_t*)ApplicationAddress, (const uint8_t*)"UploadedFlashImage.bin", FLASH_IMAGE_SIZE);

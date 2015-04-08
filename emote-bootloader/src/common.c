@@ -25,6 +25,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "common.h"
 #include "ymodem.h"
+#include "serial.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -38,7 +39,10 @@ extern uint32_t FlashDestination;
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
-
+void assert_failed(uint8_t * file, uint32_t line)
+{
+	
+}
 /**
   * @brief  Convert an Integer to a string
   * @param  str: The string
@@ -194,7 +198,7 @@ uint32_t GetIntegerInput(int32_t * num)
   *         0: Error
   */
 /*extern uint32_t Loader_GetByte(uint8_t *key);*/
-uint32_t SerialKeyPressed(uint8_t *key)
+uint32_t SerialGetChar(uint8_t *key)
 {
 
   /*return Loader_GetByte(key);*/
@@ -211,34 +215,21 @@ uint32_t SerialKeyPressed(uint8_t *key)
   
 }
 
-/**
-  * @brief  Get a key from the HyperTerminal
-  * @param  None
-  * @retval The Key Pressed
-  */
-uint8_t GetKey(void)
+
+
+int32_t Serial_ReceiveByte(uint8_t *c, int32_t timeout)
 {
-  uint8_t key = 0;
-
-  /* Waiting for user input */
-  while (1)
+	int ref = 0;
+	if(timeout == -1)
+		ref = 1;
+  while (timeout-- > 0 || ref)
   {
-    if (SerialKeyPressed((uint8_t*)&key)) break;
-  }
-  return key;
-
-}
-
-int32_t Receive_Char (uint8_t *c, uint32_t timeout)
-{
-  while (timeout-- > 0)
-  {
-    if (SerialKeyPressed(c) == 1)
+    if (SerialGetChar(c) == 1)
     {
-      return 0;
+      return 1;
     }
   }
-  return -1;
+  return 0;
 }
 
 /**
@@ -281,7 +272,8 @@ void GetInputString (uint8_t * buffP)
   uint8_t c = 0;
   do
   {
-    c = GetKey();
+    /*c = GetKey();*/
+		SerialGetChar(&c);
     if (c == '\r')
       break;
     if (c == '\b') /* Backspace */
@@ -398,17 +390,7 @@ void FLASH_DisableWriteProtectionPages(void)
     SerialPutString("Flash memory not write protected\r\n");
   }
 }
-void show_version(){
-	
-	  SerialPutString("\r\n======================================================================");
-    SerialPutString("\r\n=              (C) COPYRIGHT 2010 STMicroelectronics                 =");
-    SerialPutString("\r\n=                                                                    =");
-    SerialPutString("\r\n=     In-Application Programming Application  (Version 3.3.0)        =");
-    SerialPutString("\r\n=                                                                    =");
-    SerialPutString("\r\n=                                   By MCD Application Team          =");
-    SerialPutString("\r\n======================================================================");
-    SerialPutString("\r\n\r\n");
-}
+
 /**
   * @brief  Display the Main Menu on to HyperTerminal
   * @param  None
@@ -417,6 +399,7 @@ void show_version(){
 void Main_Menu(void)
 {
   uint8_t key = 0;
+	uint8_t ack = 0;
   
   /* Get the number of block (4 or 2 pages) from where the user program will be loaded */
   BlockNbr = (FlashDestination - 0x08000000) >> 12;
@@ -446,27 +429,23 @@ void Main_Menu(void)
   {
     FlashProtection = 0;
   }
-
+  
+  SerialPutString("\r\n======================================================================");
+	SerialPutString("\r\n=              (C) COPYRIGHT 2010 STMicroelectronics                 =");
+	SerialPutString("\r\n=                                                                    =");
+	SerialPutString("\r\n=     In-Application Programming Application  (Version 3.3.0)        =");
+	SerialPutString("\r\n=                                                                    =");
+	SerialPutString("\r\n=                                   By MCD Application Team          =");
+	SerialPutString("\r\n======================================================================");
+	SerialPutString("\r\n\r\n");
   while (1)
   {
-		if( Receive_Char(&key,500000) == -1)
-		{
-			if (((*(__IO uint32_t*)ApplicationAddress) & 0x2FFE0000 ) == 0x20000000)
-			{
-				
-			  JumpAddress = *(__IO uint32_t*) (ApplicationAddress + 4);
-
-				/* Jump to user application */
-				Jump_To_Application = (pFunction) JumpAddress;
-				/* Initialize user application's Stack Pointer */
-				__set_MSP(*(__IO uint32_t*) ApplicationAddress);
-				Jump_To_Application();
-			}
-		}		
 		
-		if(key == 0x16) // 'SYN',directy download Image
+		Serial_ReceiveByte(&key,300000);
+		if(key == 0x1D) /* receive sync */
 		{
-			SerialPutChar(0x6); // reply with 'ACK'
+			ack = 0x1E;
+			SerialPutChar(ack);
 			if (SerialDownload()> 0)
 			{
 				JumpAddress = *(__IO uint32_t*) (ApplicationAddress + 4);
@@ -477,10 +456,11 @@ void Main_Menu(void)
 				__set_MSP(*(__IO uint32_t*) ApplicationAddress);
 				Jump_To_Application();
 			}
-		}
-		if(key == 0x70 ) // 'p' show the menu
+			
+		} 
+		/*receive 'p'*/
+		else if(key == 0x70 ) 
 		{
-			show_version();
 			while(1)
 			{
 				
@@ -496,7 +476,8 @@ void Main_Menu(void)
 				
 				SerialPutString("==========================================================\r\n\n");
 				
-				key = GetKey();
+				if(Serial_ReceiveByte(&key,-1))
+					SerialPutChar(key);
 			
 				if (key == 0x31)
 				{
@@ -536,6 +517,17 @@ void Main_Menu(void)
 				}
 			}
 		 }
+		else if (((*(__IO uint32_t*)ApplicationAddress) & 0x2FFE0000 ) == 0x20000000)
+			{
+				
+			  JumpAddress = *(__IO uint32_t*) (ApplicationAddress + 4);
+
+				/* Jump to user application */
+				Jump_To_Application = (pFunction) JumpAddress;
+				/* Initialize user application's Stack Pointer */
+				__set_MSP(*(__IO uint32_t*) ApplicationAddress);
+				Jump_To_Application();
+			}
 		}	
 }
 

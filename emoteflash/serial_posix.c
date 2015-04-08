@@ -137,7 +137,7 @@ int serial_read(const serial_t *h, void *buf,size_t nbyte)
 		pos += r;
 		cnt += r;
 	}
-	return 1;
+	return cnt;
 }
 
 int serial_write(const serial_t *h,void *buf,size_t nbyte)
@@ -158,5 +158,5 @@ int serial_write(const serial_t *h,void *buf,size_t nbyte)
 		cnt += r;
 		
 	}
-	return 1;
+	return cnt;
 }

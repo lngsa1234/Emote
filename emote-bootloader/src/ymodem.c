@@ -67,11 +67,11 @@ static  int32_t Receive_Byte (uint8_t *c, uint32_t timeout)
   * @param  c: Character
   * @retval 0: Byte sent
   */
-/*extern void USART_To_USB_Send_Data(uint8_t c);*/
+extern void USART_To_USB_Send_Data(uint8_t c);
 static uint32_t Send_Byte (uint8_t c)
 {
-  SerialPutChar(c);
-  /*USART_To_USB_Send_Data(c);*/
+  //SerialPutChar(c);
+  USART_To_USB_Send_Data(c);
   return 0;
 }
 

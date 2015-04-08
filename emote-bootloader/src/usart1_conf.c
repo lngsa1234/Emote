@@ -1,10 +1,10 @@
 /**
   ******************************************************************************
-  * @file    USART/Printf/main.c 
-  * @author  MCD Application Team
-  * @version V3.5.0
-  * @date    08-April-2011
-  * @brief   Main program body
+  * @file    emote-bootloader/src/usart1_config.c
+  * @author  Ling Wang
+  * @version V1.0.0
+  * @date    3/31/2015
+  * @brief   Uart configuration
   ******************************************************************************
   * @attention
   *

@@ -156,7 +156,24 @@
           <Name>-O14 -S0 -C0 -N00("ARM Cortex-M3") -D00(1BA00477) -L00(4) -FO7 -FD20000000 -FC800 -FN1 -FF0STM32F10x_1024 -FS08000000 -FL0100000)</Name>
         </SetRegEntry>
       </TargetDriverDllRegistry>
-      <Breakpoint/>
+      <Breakpoint>
+        <Bp>
+          <Number>0</Number>
+          <Type>0</Type>
+          <LineNumber>112</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134253632</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>F:\share\TinyOS-STM-v0.9b\tos\chips\stm32\uart-serial\usart_conf.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\tinyos_stm32\usart_conf.c\112</Expression>
+        </Bp>
+      </Breakpoint>
       <Tracepoint>
         <THDelay>0</THDelay>
       </Tracepoint>
@@ -205,7 +222,7 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>43</TopLine>
+      <TopLine>40</TopLine>
       <CurrentLine>41</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\startup_stm32f10x_xl.s</PathWithFileName>
@@ -219,10 +236,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>1</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>3460</TopLine>
-      <CurrentLine>3480</CurrentLine>
+      <TopLine>4262</TopLine>
+      <CurrentLine>4270</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>F:\share\TinyOS-STM-v0.9b\apps\UsartSerialTest\build\emote\appmangle.c</PathWithFileName>
       <FilenameWithoutPath>appmangle.c</FilenameWithoutPath>
@@ -565,7 +582,7 @@
       <Focus>0</Focus>
       <ColumnNumber>12</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>1404</TopLine>
+      <TopLine>1407</TopLine>
       <CurrentLine>1410</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>F:\share\TinyOS-STM-v0.9b\tos\chips\stm32\fwlib\src\stm32f10x_rcc.c</PathWithFileName>
@@ -677,8 +694,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>1</TopLine>
-      <CurrentLine>1</CurrentLine>
+      <TopLine>191</TopLine>
+      <CurrentLine>196</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>F:\share\TinyOS-STM-v0.9b\tos\chips\stm32\fwlib\src\system_stm32f10x.c</PathWithFileName>
       <FilenameWithoutPath>system_stm32f10x.c</FilenameWithoutPath>
@@ -1109,7 +1126,7 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>103</TopLine>
+      <TopLine>107</TopLine>
       <CurrentLine>112</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>F:\share\TinyOS-STM-v0.9b\tos\chips\stm32\uart-serial\usart_conf.c</PathWithFileName>

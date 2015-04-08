@@ -27,13 +27,11 @@
 //#include "common.h"
 //#include "stm32f10x_flash.h"
 #include <stdio.h>
-#include <string.h>
-#include <unistd.h>
-#include <stdlib.h>
-
 #include "ymodem.h"
+#include "debug.h"
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
+#define FLASH_IMAGE_SIZE 0x100000
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 uint8_t file_name[FILE_NAME_LENGTH];
@@ -150,7 +148,7 @@ static int32_t Receive_Packet (uint8_t *data, int32_t *length, uint32_t timeout)
   * @param  buf: Address of the first byte
   * @retval The size of the file
   */
- #if 0
+#if 0
 int32_t Ymodem_Receive (uint8_t *buf)
 {
   uint8_t packet_data[PACKET_1K_SIZE + PACKET_OVERHEAD], file_size[FILE_SIZE_LENGTH], *file_ptr, *buf_ptr;
@@ -292,8 +290,7 @@ int32_t Ymodem_Receive (uint8_t *buf)
   }
   return (int32_t)size;
 }
-#endif 
-	
+#endif
 /**
   * @brief  check response using the ymodem protocol
   * @param  buf: Address of the first byte
@@ -446,8 +443,8 @@ uint8_t CalChecksum(const uint8_t* data, uint32_t size)
 void Ymodem_SendPacket(uint8_t *data, uint16_t length)
 {
   uint16_t i;
-  i = 0;
-  #if 0
+   i = 0;
+  #if 1
   while (i < length)
   {
     Send_Byte(data[i]);
@@ -463,46 +460,22 @@ void Ymodem_SendPacket(uint8_t *data, uint16_t length)
   * @param  buf: Address of the first byte
   * @retval The size of the file
   */
-uint8_t Ymodem_Transmit (const uint8_t* sendFileName)
+uint8_t Ymodem_Transmit (uint8_t *buf, const uint8_t* sendFileName, uint32_t sizeFile)
 {
   
   uint8_t packet_data[PACKET_1K_SIZE + PACKET_OVERHEAD];
   uint8_t FileName[FILE_NAME_LENGTH];
-  uint8_t buf[PACKET_1K_SIZE];
   uint8_t *buf_ptr, tempCheckSum ;
   uint16_t tempCRC, blkNumber;
   uint8_t receivedC[2], CRC16_F = 0, i;
   uint32_t errors, ackReceived, size = 0, pktSize;
-  uint32_t sizeFile;
-  uint8_t* tmp;
-  FILE* fp;
+
   errors = 0;
   ackReceived = 0;
-  
-  fp = fopen(sendFileName,"r");
-  if(fp== NULL){
-  	
-  	printf("open image file failed...\n");
-  	return -1;
- }
- 
-  /*get the file size*/
-  fseek(fp, 0, SEEK_END); 
-  sizeFile = ftell(fp); 
-  fseek(fp, 0, SEEK_SET); 
-  #if 0
   for (i = 0; i < (FILE_NAME_LENGTH - 1); i++)
   {
     FileName[i] = sendFileName[i];
   }
-  /* extract file name from the whole path name*/
-  #else
-  memset((void *)FileName,'\0', FILE_NAME_LENGTH);
-  tmp = strrchr(sendFileName,'/');
-  strcpy(FileName,tmp+1);
-  printf("The image file is %s \n",FileName);
-  #endif
-  
   CRC16_F = 1;       
     
   /* Prepare first block */
@@ -538,15 +511,15 @@ uint8_t Ymodem_Transmit (const uint8_t* sendFileName)
     {
         errors++;
     }
-  }while (!ackReceived && (errors < 0x0A));
+  }while (!ackReceived && (errors < 0x2A));
   
-  if (errors >=  0x0A)
+  if (errors >=  0x2A)
   {
+    debug_print("receive initial package response timeout...");
     return errors;
   }
-  
-  size = (uint32_t)fread(buf,(ssize_t)sizeof(uint8_t),(ssize_t)PACKET_1K_SIZE,fp);
   buf_ptr = buf;
+  size = sizeFile;
   blkNumber = 0x01;
   /* Here 1024 bytes package is used to send the packets */
   
@@ -554,7 +527,6 @@ uint8_t Ymodem_Transmit (const uint8_t* sendFileName)
   /* Resend packet if NAK  for a count of 10 else end of commuincation */
   while (size)
   {
-  	
     /* Prepare next packet */
     Ymodem_PreparePacket(buf_ptr, &packet_data[0], blkNumber, size);
     ackReceived = 0;
@@ -586,37 +558,44 @@ uint8_t Ymodem_Transmit (const uint8_t* sendFileName)
         tempCheckSum = CalChecksum (&packet_data[3], pktSize);
         Send_Byte(tempCheckSum);
       }
-      
+      debug_print("package %d has sent...",blkNumber);      
       /* Wait for Ack */
       if ((Receive_Byte(&receivedC[0], 100000) == 0)  && (receivedC[0] == ACK))
       {
-        ackReceived = 1; 
-        /* the packge is the last one and has not finished*/ 
+        ackReceived = 1;  
+        debug_print("package %d has sent...",blkNumber);      
+      /* Wait for Ack */
         if (size > pktSize)
         {
-           buf_ptr += pktSize; 
+           buf_ptr += pktSize;  
            size -= pktSize;
-           blkNumber++;
-           
+           if (blkNumber == (FLASH_IMAGE_SIZE/1024))
+           {
+             return 0xFF; /*  error */
+           }
+           else
+           {
+              blkNumber++;
+           }
         }
         else
         {
-          size = (uint32_t)fread(buf,(ssize_t)sizeof(uint8_t),(ssize_t)PACKET_1K_SIZE,fp);
-		  buf_ptr = buf;
-          printf("%d bytes readed...\n",size);
-		  blkNumber++;
+          buf_ptr += pktSize;
+          size = 0;
         }
       }
       else
       {
         errors++;
       }
-    }while(!ackReceived && (errors < 0x0A));
+    }while(!ackReceived && (errors < 0x2A));
     /* Resend packet if NAK  for a count of 10 else end of commuincation */
     
-    if (errors >=  0x0A)
+    if (errors >=  0x2A)
     {
-      return errors;
+    
+      debug_print("receive package %d response timeout...", blkNumber);
+        return errors;
     }
     
   }
@@ -636,9 +615,9 @@ uint8_t Ymodem_Transmit (const uint8_t* sendFileName)
       {
         errors++;
       }
-  }while (!ackReceived && (errors < 0x0A));
+  }while (!ackReceived && (errors < 0x2A));
     
-  if (errors >=  0x0A)
+  if (errors >=  0x2A)
   {
     return errors;
   }
@@ -680,9 +659,9 @@ uint8_t Ymodem_Transmit (const uint8_t* sendFileName)
         errors++;
     }
  
-  }while (!ackReceived && (errors < 0x0A));
+  }while (!ackReceived && (errors < 0x2A));
   /* Resend packet if NAK  for a count of 10  else end of commuincation */
-  if (errors >=  0x0A)
+  if (errors >=  0x2A)
   {
     return errors;
   }  
@@ -700,9 +679,9 @@ uint8_t Ymodem_Transmit (const uint8_t* sendFileName)
       {
         errors++;
       }
-  }while (!ackReceived && (errors < 0x0A));
+  }while (!ackReceived && (errors < 0x2A));
     
-  if (errors >=  0x0A)
+  if (errors >=  0x2A)
   {
     return errors;
   }

@@ -24,6 +24,7 @@
   */
 /* Includes ------------------------------------------------------------------*/
 #include "common.h"
+#include "stm32f10x_flash.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -60,22 +61,26 @@ int32_t SerialDownload(void)
     SerialPutString(" Bytes\r\n");
     SerialPutString("-------------------\n");
   }
-  else if (Size == -1)
-  {
-    SerialPutString("\n\n\rThe image size is higher than the allowed space memory!\n\r");
-  }
-  else if (Size == -2)
-  {
-    SerialPutString("\n\n\rVerification failed!\n\r");
-  }
-  else if (Size == -3)
-  {
-    SerialPutString("\r\n\nAborted by user.\n\r");
-  }
-  else
-  {
-    SerialPutString("\n\rFailed to receive the file!\n\r");
-  }
+  else {
+		/* erase the first page if download fails*/
+		FLASH_ErasePage(ApplicationAddress);
+		if (Size == -1)
+		{
+			SerialPutString("\n\n\rThe image size is higher than the allowed space memory!\n\r");
+		}
+		else if (Size == -2)
+		{
+			SerialPutString("\n\n\rVerification failed!\n\r");
+		}
+		else if (Size == -3)
+		{
+			SerialPutString("\r\n\nAborted by user.\n\r");
+		}
+		else
+		{
+			SerialPutString("\n\rFailed to receive the file!\n\r");
+		}
+	}
 	return Size;
 }
 

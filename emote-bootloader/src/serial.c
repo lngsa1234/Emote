@@ -50,52 +50,10 @@ int SER_PutChar (int c) {
   while (!(USART1->SR & USART_SR_TXE));
   USART1->DR = (c & 0x1FF);
 	
-	/*
-	#ifdef  USE_USART2 
-  while (!(USART2->SR & USART_SR_TXE));
-  USART2->DR = (c & 0x1FF);
-	#endif
-	*/
 #endif
   return (c);
 }
-/*
-void USART1_test()
-{
-	char* p="USART1 is printing Hello World!";
-	while(*p){
-		while (!(USART1->SR & USART_SR_TXE));
-    USART1->DR = (*p++ & 0x1FF);
-	}
-}
 
-void USART2_test()
-{
-	char* p="USART2 is printing Hello World!";
-	while(*p){
-		while (!(USART2->SR & USART_SR_TXE));
-    USART2->DR = (*p++ & 0x1FF);
-	}
-}
-
-void USART3_test()
-{
-	char* p="USART3 is printing Hello World!";
-	while(*p){
-		while (!(USART3->SR & USART_SR_TXE));
-    USART3->DR = (*p++ & 0x1FF);
-	}
-}
-
-void USART4_test()
-{
-	char* p="UART4 is printing Hello World!";
-	while(*p){
-		while (!(UART4->SR & USART_SR_TXE));
-    UART4->DR = (*p++ & 0x1FF);
-	}
-}
-*/
 
 /*----------------------------------------------------------------------------
   Read character from Serial Port   (blocking read)
@@ -115,13 +73,15 @@ int SER_GetChar (void) {
 /*----------------------------------------------------------------------------
   Check if a character is received
  *----------------------------------------------------------------------------*/
-int SER_CheckChar (void) {
+int SER_CheckChar (int* c) {
 
 #ifdef __DBG_ITM
   return (ITM_CheckChar());
 #else
-  if (USART1->SR & USART_SR_RXNE)
+  if (USART1->SR & USART_SR_RXNE){
+		*c = USART1->DR & 0xFF;
     return (1);
+	}
   else
     return (0);
 #endif

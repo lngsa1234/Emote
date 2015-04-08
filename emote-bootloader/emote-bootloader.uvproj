@@ -362,7 +362,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_XL USE_STDPERIPH_DRIVER USE_FULL_ASSERT</Define>
               <Undefine></Undefine>
-              <IncludePath>..\USART;.\cmsis;.\emlib;.\source</IncludePath>
+              <IncludePath>..\USART;.\cmsis;.\emlib;.\src</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -498,67 +498,72 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>source</GroupName>
+          <GroupName>src</GroupName>
           <Files>
-            <File>
-              <FileName>Retarget.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\source\Retarget.c</FilePath>
-            </File>
-            <File>
-              <FileName>Serial.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\source\Serial.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f10x_it.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\source\stm32f10x_it.c</FilePath>
-            </File>
-            <File>
-              <FileName>usart1_conf.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\source\usart1_conf.c</FilePath>
-            </File>
-            <File>
-              <FileName>startup_stm32f10x_xl.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>.\source\startup_stm32f10x_xl.s</FilePath>
-            </File>
             <File>
               <FileName>common.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\source\common.c</FilePath>
+              <FilePath>.\src\common.c</FilePath>
             </File>
             <File>
               <FileName>download.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\source\download.c</FilePath>
+              <FilePath>.\src\download.c</FilePath>
             </File>
             <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\source\main.c</FilePath>
+              <FilePath>.\src\main.c</FilePath>
             </File>
             <File>
-              <FileName>common.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\source\common.h</FilePath>
+              <FileName>startup_stm32f10x_xl.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>.\src\startup_stm32f10x_xl.s</FilePath>
             </File>
             <File>
-              <FileName>ymodem.h</FileName>
+              <FileName>stm32f10x_conf.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\source\ymodem.h</FilePath>
+              <FilePath>.\src\stm32f10x_conf.h</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f10x_it.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\stm32f10x_it.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f10x_it.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\stm32f10x_it.h</FilePath>
+            </File>
+            <File>
+              <FileName>uart.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\uart.h</FilePath>
             </File>
             <File>
               <FileName>upload.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\source\upload.c</FilePath>
+              <FilePath>.\src\upload.c</FilePath>
+            </File>
+            <File>
+              <FileName>usart1_conf.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\usart1_conf.c</FilePath>
             </File>
             <File>
               <FileName>ymodem.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\source\ymodem.c</FilePath>
+              <FilePath>.\src\ymodem.c</FilePath>
+            </File>
+            <File>
+              <FileName>ymodem.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\ymodem.h</FilePath>
+            </File>
+            <File>
+              <FileName>common.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\common.h</FilePath>
             </File>
           </Files>
         </Group>
