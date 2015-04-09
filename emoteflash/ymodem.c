@@ -27,6 +27,10 @@
 //#include "common.h"
 //#include "stm32f10x_flash.h"
 #include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <stdlib.h>
+
 #include "ymodem.h"
 #include "debug.h"
 /* Private typedef -----------------------------------------------------------*/
@@ -443,11 +447,13 @@ uint8_t CalChecksum(const uint8_t* data, uint32_t size)
 void Ymodem_SendPacket(uint8_t *data, uint16_t length)
 {
   uint16_t i;
-   i = 0;
+  i = 0;
   #if 1
   while (i < length)
   {
+    
     Send_Byte(data[i]);
+   debug_print("%x ",data[i]);
     i++;
   }
   #else
@@ -511,11 +517,10 @@ uint8_t Ymodem_Transmit (uint8_t *buf, const uint8_t* sendFileName, uint32_t siz
     {
         errors++;
     }
-  }while (!ackReceived && (errors < 0x2A));
+  }while (!ackReceived && (errors < 0x0A));
   
-  if (errors >=  0x2A)
+  if (errors >=  0x0A)
   {
-    debug_print("receive initial package response timeout...");
     return errors;
   }
   buf_ptr = buf;
@@ -558,13 +563,13 @@ uint8_t Ymodem_Transmit (uint8_t *buf, const uint8_t* sendFileName, uint32_t siz
         tempCheckSum = CalChecksum (&packet_data[3], pktSize);
         Send_Byte(tempCheckSum);
       }
-      debug_print("package %d has sent...",blkNumber);      
+      debug_print("package %d has sent...:%d\n",blkNumber,pktSize);      
+      for(i=0;i<20;i++)
+        debug_print("%x ",packet_data[i]);
       /* Wait for Ack */
       if ((Receive_Byte(&receivedC[0], 100000) == 0)  && (receivedC[0] == ACK))
       {
         ackReceived = 1;  
-        debug_print("package %d has sent...",blkNumber);      
-      /* Wait for Ack */
         if (size > pktSize)
         {
            buf_ptr += pktSize;  
@@ -588,14 +593,12 @@ uint8_t Ymodem_Transmit (uint8_t *buf, const uint8_t* sendFileName, uint32_t siz
       {
         errors++;
       }
-    }while(!ackReceived && (errors < 0x2A));
+    }while(!ackReceived && (errors < 0x0A));
     /* Resend packet if NAK  for a count of 10 else end of commuincation */
     
-    if (errors >=  0x2A)
+    if (errors >=  0x0A)
     {
-    
-      debug_print("receive package %d response timeout...", blkNumber);
-        return errors;
+      return errors;
     }
     
   }
@@ -615,9 +618,9 @@ uint8_t Ymodem_Transmit (uint8_t *buf, const uint8_t* sendFileName, uint32_t siz
       {
         errors++;
       }
-  }while (!ackReceived && (errors < 0x2A));
+  }while (!ackReceived && (errors < 0x0A));
     
-  if (errors >=  0x2A)
+  if (errors >=  0x0A)
   {
     return errors;
   }
@@ -659,9 +662,9 @@ uint8_t Ymodem_Transmit (uint8_t *buf, const uint8_t* sendFileName, uint32_t siz
         errors++;
     }
  
-  }while (!ackReceived && (errors < 0x2A));
+  }while (!ackReceived && (errors < 0x0A));
   /* Resend packet if NAK  for a count of 10  else end of commuincation */
-  if (errors >=  0x2A)
+  if (errors >=  0x0A)
   {
     return errors;
   }  
@@ -679,9 +682,9 @@ uint8_t Ymodem_Transmit (uint8_t *buf, const uint8_t* sendFileName, uint32_t siz
       {
         errors++;
       }
-  }while (!ackReceived && (errors < 0x2A));
+  }while (!ackReceived && (errors < 0x0A));
     
-  if (errors >=  0x2A)
+  if (errors >=  0x0A)
   {
     return errors;
   }

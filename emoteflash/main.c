@@ -78,16 +78,24 @@
    printf("malloc buffer failed...");
    return;
   }
-   if (Serial_ReceiveByte(&c,-1) == 1 && c == CRC16){
-   	printf("Uploading the image to target...\n");
-	status = Ymodem_Transmit((int8_t *)buf, (const uint8_t *)filename, fileSize);
+ if(fread(buf,1,fileSize,fp) != fileSize){
+  printf("read file failed...");
+ }
+ 
+
+ if (Serial_ReceiveByte(&c,-1) == 1 && c == CRC16){
+   	printf("Uploading the image %s to target...:%d byte\n",filename,fileSize );
+	status = Ymodem_Transmit((uint8_t *)buf, (const uint8_t *)filename, fileSize);
 	if (status != 0){
 		printf("\n\rError Occured while Transmitting File!please try again!\n\r");
 		}else{
 		printf("\n\rFile Trasmitted Successfully \n\r");
 		}
 		}
-   }
+  free(buf);
+  buf =NULL;
+  fclose(fp); 
+  }
  
   int main(int argc, char *argv[])
   {
@@ -97,8 +105,6 @@
 	int ret; 
 	int cnt = 100;
 	int timeout = 1;
-	char buf[200];
-	int i;
     
     if( argc < 3){
     	printf("Please input image file name and serial device name: \n");
@@ -129,7 +135,7 @@
 	   printf("write key falied...%d\n",ret);
 	 }
 
-	 while(Serial_ReceiveByte(&recv,timeout) == 1){
+	 while(Serial_ReceiveByte((char *)&recv,timeout) == 1){
 		if(recv== 0x1E){
 			debug_print("Ack received...\n");
 			SerialUpload(imageFile);
