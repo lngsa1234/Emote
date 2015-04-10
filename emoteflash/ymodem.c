@@ -32,6 +32,7 @@
 #include <stdlib.h>
 
 #include "ymodem.h"
+#include "serial.h"
 #include "debug.h"
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -39,7 +40,8 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 uint8_t file_name[FILE_NAME_LENGTH];
-/*uint32_t FlashDestination = ApplicationAddress; /* Flash user program offset */
+
+
 /*uint16_t PageSize = PAGE_SIZE;*/
 uint32_t EraseCounter = 0x0;
 uint32_t NbrOfPage = 0;
@@ -63,7 +65,7 @@ static  int32_t Receive_Byte (uint8_t *c, uint32_t timeout)
 {
   while (timeout-- > 0)
   {
-    if (SerialGetChar(c) == 1)
+    if (SerialGetChar((char*)c) == 1)
     {
       return 0;
     }
@@ -96,6 +98,7 @@ static uint32_t Send_Byte (uint8_t c)
   *        -1: timeout or packet error
   *         1: abort by user
   */
+#if 0
 static int32_t Receive_Packet (uint8_t *data, int32_t *length, uint32_t timeout)
 {
   uint16_t i, packet_size;
@@ -146,7 +149,7 @@ static int32_t Receive_Packet (uint8_t *data, int32_t *length, uint32_t timeout)
   *length = packet_size;
   return 0;
 }
-
+#endif
 /**
   * @brief  Receive a file using the ymodem protocol
   * @param  buf: Address of the first byte
@@ -329,7 +332,7 @@ void Ymodem_PrepareIntialPacket(uint8_t *data, const uint8_t* fileName, uint32_t
   data[i + PACKET_HEADER] = 0x00;
   
   /*Int2Str (file_ptr, *length);*/
-  sprintf(file_ptr,"%d",(int)*length);
+  sprintf((char *)file_ptr,"%d",(int)*length);
   
   for (j =0, i = i + PACKET_HEADER + 1; file_ptr[j] != '\0' ; )
   {
@@ -505,13 +508,15 @@ uint8_t Ymodem_Transmit (uint8_t *buf, const uint8_t* sendFileName, uint32_t siz
     }
   
     /* Wait for Ack and 'C' */
-    if (Receive_Byte(&receivedC[0], 10000) == 0)  
+    if (Receive_Byte(&receivedC[0], 10000) == 0&& receivedC[0] == ACK)  
     {
-      if (receivedC[0] == ACK)
+    /*  if (receivedC[0] == ACK)*/
+      if (Receive_Byte(&receivedC[1], 10000) == 0&& receivedC[1] == CRC16)   
       { 
         /* Packet transfered correctly */
         ackReceived = 1;
-      }
+      }else
+       errors++; 
     }
     else
     {
