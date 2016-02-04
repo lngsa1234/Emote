@@ -1,0 +1,15 @@
+.\objects\usart1_conf.o: src\usart1_conf.c
+.\objects\usart1_conf.o: ./cmsis/stm32f10x.h
+.\objects\usart1_conf.o: ./cmsis/core_cm3.h
+.\objects\usart1_conf.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\usart1_conf.o: ./cmsis/core_cmInstr.h
+.\objects\usart1_conf.o: ./cmsis/core_cmFunc.h
+.\objects\usart1_conf.o: ./cmsis/system_stm32f10x.h
+.\objects\usart1_conf.o: ./src/stm32f10x_conf.h
+.\objects\usart1_conf.o: ./emlib/stm32f10x_flash.h
+.\objects\usart1_conf.o: ./cmsis/stm32f10x.h
+.\objects\usart1_conf.o: ./emlib/stm32f10x_gpio.h
+.\objects\usart1_conf.o: ./emlib/stm32f10x_rcc.h
+.\objects\usart1_conf.o: ./emlib/stm32f10x_usart.h
+.\objects\usart1_conf.o: ./emlib/misc.h
+.\objects\usart1_conf.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h

@@ -1,0 +1,135 @@
+Dependencies for Project 'app_hello', Target 'Target 1': (DO NOT MODIFY !)
+F (.\startup_stm32f10x_xl.s)(0x532CC60A)(--cpu Cortex-M3 -g --apcs=interwork -I d:\Keil\ARM\RV31\INC-I d:\Keil\ARM\CMSIS\Include-I d:\Keil\ARM\Inc\ST\STM32F10x--list .\startup_stm32f10x_xl.lst --xref -o .\obj\startup_stm32f10x_xl.o --depend .\obj\startup_stm32f10x_xl.d)
+F (.\Hello.c)(0x54BEC748)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I.\cmsis -I.\emlib -I..\APP_HELLO-I d:\Keil\ARM\RV31\INC-I d:\Keil\ARM\CMSIS\Include-I d:\Keil\ARM\Inc\ST\STM32F10x-DSTM32F10X_XL -DUSE_STDPERIPH_DRIVER-o .\obj\hello.o --omf_browse .\obj\hello.crf --depend .\obj\hello.d)
+I (d:\Keil\ARM\ARMCC\include\stdio.h)(0x51C89844)
+I (d:\Keil\ARM\Inc\ST\STM32F10x\stm32f10x.h)(0x532CC64C)
+I (d:\Keil\ARM\CMSIS\Include\core_cm3.h)(0x532CCAB2)
+I (d:\Keil\ARM\ARMCC\include\stdint.h)(0x51C89844)
+I (d:\Keil\ARM\CMSIS\Include\core_cmInstr.h)(0x532CCAB2)
+I (d:\Keil\ARM\CMSIS\Include\core_cmFunc.h)(0x532CCAB2)
+I (d:\Keil\ARM\Inc\ST\STM32F10x\system_stm32f10x.h)(0x532CC64A)
+I (..\APP_HELLO\stm32f10x_conf.h)(0x549F6233)
+I (.\emlib\stm32f10x_gpio.h)(0x4D78F284)
+I (.\emlib\stm32f10x_rcc.h)(0x4D78F284)
+I (.\emlib\stm32f10x_usart.h)(0x4D78F284)
+I (.\emlib\misc.h)(0x4D78F284)
+F (.\Retarget.c)(0x54BECCFE)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I.\cmsis -I.\emlib -I..\APP_HELLO-I d:\Keil\ARM\RV31\INC-I d:\Keil\ARM\CMSIS\Include-I d:\Keil\ARM\Inc\ST\STM32F10x-DSTM32F10X_XL -DUSE_STDPERIPH_DRIVER-o .\obj\retarget.o --omf_browse .\obj\retarget.crf --depend .\obj\retarget.d)
+I (d:\Keil\ARM\ARMCC\include\stdio.h)(0x51C89844)
+I (d:\Keil\ARM\ARMCC\include\rt_misc.h)(0x51C89844)
+F (.\system_stm32f10x.c)(0x549A6B25)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I.\cmsis -I.\emlib -I..\APP_HELLO-I d:\Keil\ARM\RV31\INC-I d:\Keil\ARM\CMSIS\Include-I d:\Keil\ARM\Inc\ST\STM32F10x-DSTM32F10X_XL -DUSE_STDPERIPH_DRIVER-o .\obj\system_stm32f10x.o --omf_browse .\obj\system_stm32f10x.crf --depend .\obj\system_stm32f10x.d)
+I (d:\Keil\ARM\Inc\ST\STM32F10x\stm32f10x.h)(0x532CC64C)
+I (d:\Keil\ARM\CMSIS\Include\core_cm3.h)(0x532CCAB2)
+I (d:\Keil\ARM\ARMCC\include\stdint.h)(0x51C89844)
+I (d:\Keil\ARM\CMSIS\Include\core_cmInstr.h)(0x532CCAB2)
+I (d:\Keil\ARM\CMSIS\Include\core_cmFunc.h)(0x532CCAB2)
+I (d:\Keil\ARM\Inc\ST\STM32F10x\system_stm32f10x.h)(0x532CC64A)
+I (..\APP_HELLO\stm32f10x_conf.h)(0x549F6233)
+I (.\emlib\stm32f10x_gpio.h)(0x4D78F284)
+I (.\emlib\stm32f10x_rcc.h)(0x4D78F284)
+I (.\emlib\stm32f10x_usart.h)(0x4D78F284)
+I (.\emlib\misc.h)(0x4D78F284)
+F (.\stm32f10x_conf.h)(0x549F6233)()
+F (.\stm32f10x_it.h)(0x4F956558)()
+F (.\stm32f10x_it.c)(0x54BEC317)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I.\cmsis -I.\emlib -I..\APP_HELLO-I d:\Keil\ARM\RV31\INC-I d:\Keil\ARM\CMSIS\Include-I d:\Keil\ARM\Inc\ST\STM32F10x-DSTM32F10X_XL -DUSE_STDPERIPH_DRIVER-o .\obj\stm32f10x_it.o --omf_browse .\obj\stm32f10x_it.crf --depend .\obj\stm32f10x_it.d)
+I (stm32f10x_it.h)(0x4F956558)
+I (d:\Keil\ARM\Inc\ST\STM32F10x\stm32f10x.h)(0x532CC64C)
+I (d:\Keil\ARM\CMSIS\Include\core_cm3.h)(0x532CCAB2)
+I (d:\Keil\ARM\ARMCC\include\stdint.h)(0x51C89844)
+I (d:\Keil\ARM\CMSIS\Include\core_cmInstr.h)(0x532CCAB2)
+I (d:\Keil\ARM\CMSIS\Include\core_cmFunc.h)(0x532CCAB2)
+I (d:\Keil\ARM\Inc\ST\STM32F10x\system_stm32f10x.h)(0x532CC64A)
+I (..\APP_HELLO\stm32f10x_conf.h)(0x549F6233)
+I (.\emlib\stm32f10x_gpio.h)(0x4D78F284)
+I (.\emlib\stm32f10x_rcc.h)(0x4D78F284)
+I (.\emlib\stm32f10x_usart.h)(0x4D78F284)
+I (.\emlib\misc.h)(0x4D78F284)
+F (.\Serial.c)(0x54BEC6ED)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I.\cmsis -I.\emlib -I..\APP_HELLO-I d:\Keil\ARM\RV31\INC-I d:\Keil\ARM\CMSIS\Include-I d:\Keil\ARM\Inc\ST\STM32F10x-DSTM32F10X_XL -DUSE_STDPERIPH_DRIVER-o .\obj\serial.o --omf_browse .\obj\serial.crf --depend .\obj\serial.d)
+I (d:\Keil\ARM\Inc\ST\STM32F10x\stm32f10x.h)(0x532CC64C)
+I (d:\Keil\ARM\CMSIS\Include\core_cm3.h)(0x532CCAB2)
+I (d:\Keil\ARM\ARMCC\include\stdint.h)(0x51C89844)
+I (d:\Keil\ARM\CMSIS\Include\core_cmInstr.h)(0x532CCAB2)
+I (d:\Keil\ARM\CMSIS\Include\core_cmFunc.h)(0x532CCAB2)
+I (d:\Keil\ARM\Inc\ST\STM32F10x\system_stm32f10x.h)(0x532CC64A)
+I (..\APP_HELLO\stm32f10x_conf.h)(0x549F6233)
+I (.\emlib\stm32f10x_gpio.h)(0x4D78F284)
+I (.\emlib\stm32f10x_rcc.h)(0x4D78F284)
+I (.\emlib\stm32f10x_usart.h)(0x4D78F284)
+I (.\emlib\misc.h)(0x4D78F284)
+F (.\usart1_conf.c)(0x54BECF91)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I.\cmsis -I.\emlib -I..\APP_HELLO-I d:\Keil\ARM\RV31\INC-I d:\Keil\ARM\CMSIS\Include-I d:\Keil\ARM\Inc\ST\STM32F10x-DSTM32F10X_XL -DUSE_STDPERIPH_DRIVER-o .\obj\usart1_conf.o --omf_browse .\obj\usart1_conf.crf --depend .\obj\usart1_conf.d)
+I (d:\Keil\ARM\Inc\ST\STM32F10x\stm32f10x.h)(0x532CC64C)
+I (d:\Keil\ARM\CMSIS\Include\core_cm3.h)(0x532CCAB2)
+I (d:\Keil\ARM\ARMCC\include\stdint.h)(0x51C89844)
+I (d:\Keil\ARM\CMSIS\Include\core_cmInstr.h)(0x532CCAB2)
+I (d:\Keil\ARM\CMSIS\Include\core_cmFunc.h)(0x532CCAB2)
+I (d:\Keil\ARM\Inc\ST\STM32F10x\system_stm32f10x.h)(0x532CC64A)
+I (..\APP_HELLO\stm32f10x_conf.h)(0x549F6233)
+I (.\emlib\stm32f10x_gpio.h)(0x4D78F284)
+I (.\emlib\stm32f10x_rcc.h)(0x4D78F284)
+I (.\emlib\stm32f10x_usart.h)(0x4D78F284)
+I (.\emlib\misc.h)(0x4D78F284)
+I (d:\Keil\ARM\ARMCC\include\stdio.h)(0x51C89844)
+F (.\emlib\misc.c)(0x4D78F284)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I.\cmsis -I.\emlib -I..\APP_HELLO-I d:\Keil\ARM\RV31\INC-I d:\Keil\ARM\CMSIS\Include-I d:\Keil\ARM\Inc\ST\STM32F10x-DSTM32F10X_XL -DUSE_STDPERIPH_DRIVER-o .\obj\misc.o --omf_browse .\obj\misc.crf --depend .\obj\misc.d)
+I (emlib\misc.h)(0x4D78F284)
+I (d:\Keil\ARM\Inc\ST\STM32F10x\stm32f10x.h)(0x532CC64C)
+I (d:\Keil\ARM\CMSIS\Include\core_cm3.h)(0x532CCAB2)
+I (d:\Keil\ARM\ARMCC\include\stdint.h)(0x51C89844)
+I (d:\Keil\ARM\CMSIS\Include\core_cmInstr.h)(0x532CCAB2)
+I (d:\Keil\ARM\CMSIS\Include\core_cmFunc.h)(0x532CCAB2)
+I (d:\Keil\ARM\Inc\ST\STM32F10x\system_stm32f10x.h)(0x532CC64A)
+I (..\APP_HELLO\stm32f10x_conf.h)(0x549F6233)
+I (.\emlib\stm32f10x_gpio.h)(0x4D78F284)
+I (.\emlib\stm32f10x_rcc.h)(0x4D78F284)
+I (.\emlib\stm32f10x_usart.h)(0x4D78F284)
+I (.\emlib\misc.h)(0x4D78F284)
+F (.\emlib\stm32f10x_flash.c)(0x4D78F284)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I.\cmsis -I.\emlib -I..\APP_HELLO-I d:\Keil\ARM\RV31\INC-I d:\Keil\ARM\CMSIS\Include-I d:\Keil\ARM\Inc\ST\STM32F10x-DSTM32F10X_XL -DUSE_STDPERIPH_DRIVER-o .\obj\stm32f10x_flash.o --omf_browse .\obj\stm32f10x_flash.crf --depend .\obj\stm32f10x_flash.d)
+I (emlib\stm32f10x_flash.h)(0x4D78F284)
+I (d:\Keil\ARM\Inc\ST\STM32F10x\stm32f10x.h)(0x532CC64C)
+I (d:\Keil\ARM\CMSIS\Include\core_cm3.h)(0x532CCAB2)
+I (d:\Keil\ARM\ARMCC\include\stdint.h)(0x51C89844)
+I (d:\Keil\ARM\CMSIS\Include\core_cmInstr.h)(0x532CCAB2)
+I (d:\Keil\ARM\CMSIS\Include\core_cmFunc.h)(0x532CCAB2)
+I (d:\Keil\ARM\Inc\ST\STM32F10x\system_stm32f10x.h)(0x532CC64A)
+I (..\APP_HELLO\stm32f10x_conf.h)(0x549F6233)
+I (.\emlib\stm32f10x_gpio.h)(0x4D78F284)
+I (.\emlib\stm32f10x_rcc.h)(0x4D78F284)
+I (.\emlib\stm32f10x_usart.h)(0x4D78F284)
+I (.\emlib\misc.h)(0x4D78F284)
+F (.\emlib\stm32f10x_gpio.c)(0x4D7AA596)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I.\cmsis -I.\emlib -I..\APP_HELLO-I d:\Keil\ARM\RV31\INC-I d:\Keil\ARM\CMSIS\Include-I d:\Keil\ARM\Inc\ST\STM32F10x-DSTM32F10X_XL -DUSE_STDPERIPH_DRIVER-o .\obj\stm32f10x_gpio.o --omf_browse .\obj\stm32f10x_gpio.crf --depend .\obj\stm32f10x_gpio.d)
+I (emlib\stm32f10x_gpio.h)(0x4D78F284)
+I (d:\Keil\ARM\Inc\ST\STM32F10x\stm32f10x.h)(0x532CC64C)
+I (d:\Keil\ARM\CMSIS\Include\core_cm3.h)(0x532CCAB2)
+I (d:\Keil\ARM\ARMCC\include\stdint.h)(0x51C89844)
+I (d:\Keil\ARM\CMSIS\Include\core_cmInstr.h)(0x532CCAB2)
+I (d:\Keil\ARM\CMSIS\Include\core_cmFunc.h)(0x532CCAB2)
+I (d:\Keil\ARM\Inc\ST\STM32F10x\system_stm32f10x.h)(0x532CC64A)
+I (..\APP_HELLO\stm32f10x_conf.h)(0x549F6233)
+I (.\emlib\stm32f10x_gpio.h)(0x4D78F284)
+I (.\emlib\stm32f10x_rcc.h)(0x4D78F284)
+I (.\emlib\stm32f10x_usart.h)(0x4D78F284)
+I (.\emlib\misc.h)(0x4D78F284)
+F (.\emlib\stm32f10x_rcc.c)(0x4D78F284)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I.\cmsis -I.\emlib -I..\APP_HELLO-I d:\Keil\ARM\RV31\INC-I d:\Keil\ARM\CMSIS\Include-I d:\Keil\ARM\Inc\ST\STM32F10x-DSTM32F10X_XL -DUSE_STDPERIPH_DRIVER-o .\obj\stm32f10x_rcc.o --omf_browse .\obj\stm32f10x_rcc.crf --depend .\obj\stm32f10x_rcc.d)
+I (emlib\stm32f10x_rcc.h)(0x4D78F284)
+I (d:\Keil\ARM\Inc\ST\STM32F10x\stm32f10x.h)(0x532CC64C)
+I (d:\Keil\ARM\CMSIS\Include\core_cm3.h)(0x532CCAB2)
+I (d:\Keil\ARM\ARMCC\include\stdint.h)(0x51C89844)
+I (d:\Keil\ARM\CMSIS\Include\core_cmInstr.h)(0x532CCAB2)
+I (d:\Keil\ARM\CMSIS\Include\core_cmFunc.h)(0x532CCAB2)
+I (d:\Keil\ARM\Inc\ST\STM32F10x\system_stm32f10x.h)(0x532CC64A)
+I (..\APP_HELLO\stm32f10x_conf.h)(0x549F6233)
+I (.\emlib\stm32f10x_gpio.h)(0x4D78F284)
+I (.\emlib\stm32f10x_rcc.h)(0x4D78F284)
+I (.\emlib\stm32f10x_usart.h)(0x4D78F284)
+I (.\emlib\misc.h)(0x4D78F284)
+F (.\emlib\stm32f10x_usart.c)(0x4D78F284)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I.\cmsis -I.\emlib -I..\APP_HELLO-I d:\Keil\ARM\RV31\INC-I d:\Keil\ARM\CMSIS\Include-I d:\Keil\ARM\Inc\ST\STM32F10x-DSTM32F10X_XL -DUSE_STDPERIPH_DRIVER-o .\obj\stm32f10x_usart.o --omf_browse .\obj\stm32f10x_usart.crf --depend .\obj\stm32f10x_usart.d)
+I (emlib\stm32f10x_usart.h)(0x4D78F284)
+I (d:\Keil\ARM\Inc\ST\STM32F10x\stm32f10x.h)(0x532CC64C)
+I (d:\Keil\ARM\CMSIS\Include\core_cm3.h)(0x532CCAB2)
+I (d:\Keil\ARM\ARMCC\include\stdint.h)(0x51C89844)
+I (d:\Keil\ARM\CMSIS\Include\core_cmInstr.h)(0x532CCAB2)
+I (d:\Keil\ARM\CMSIS\Include\core_cmFunc.h)(0x532CCAB2)
+I (d:\Keil\ARM\Inc\ST\STM32F10x\system_stm32f10x.h)(0x532CC64A)
+I (..\APP_HELLO\stm32f10x_conf.h)(0x549F6233)
+I (.\emlib\stm32f10x_gpio.h)(0x4D78F284)
+I (.\emlib\stm32f10x_rcc.h)(0x4D78F284)
+I (.\emlib\stm32f10x_usart.h)(0x4D78F284)
+I (.\emlib\misc.h)(0x4D78F284)

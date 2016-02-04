@@ -1,0 +1,15 @@
+.\obj\hello.o: Hello.c
+.\obj\hello.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\obj\hello.o: D:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.0.0\Device\Include\stm32f10x.h
+.\obj\hello.o: D:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cm3.h
+.\obj\hello.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\obj\hello.o: D:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmInstr.h
+.\obj\hello.o: D:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\cmsis_armcc.h
+.\obj\hello.o: D:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmFunc.h
+.\obj\hello.o: D:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.0.0\Device\Include\system_stm32f10x.h
+.\obj\hello.o: ..\APP_HELLO\stm32f10x_conf.h
+.\obj\hello.o: .\emlib\stm32f10x_gpio.h
+.\obj\hello.o: D:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.0.0\Device\Include\stm32f10x.h
+.\obj\hello.o: .\emlib\stm32f10x_rcc.h
+.\obj\hello.o: .\emlib\stm32f10x_usart.h
+.\obj\hello.o: .\emlib\misc.h

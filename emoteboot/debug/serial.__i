@@ -1,0 +1,6 @@
+-c --cpu Cortex-M3 -D__EVAL -g -O0 --apcs=interwork -I..\USART -I.\cmsis -I.\emlib -I.\source
+-I C:\Users\lngsa\Dropbox\emote\USART\RTE
+-I D:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.0.0\Device\Include
+-I D:\Keil_v5\ARM\CMSIS\Include
+-D__UVISION_VERSION="516" -DSTM32F10X_XL -DSTM32F10X_XL -DUSE_STDPERIPH_DRIVER -DUSE_FULL_ASSERT
+-o .\debug\serial.o --omf_browse .\debug\serial.crf --depend .\debug\serial.d "source\Serial.c"

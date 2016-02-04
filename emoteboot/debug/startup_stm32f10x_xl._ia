@@ -1,0 +1,6 @@
+--cpu Cortex-M3 --pd "__EVAL SETA 1" -g --apcs=interwork 
+-I C:\Users\lngsa\Dropbox\emote\USART\RTE
+-I D:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.0.0\Device\Include
+-I D:\Keil_v5\ARM\CMSIS\Include
+--pd "__UVISION_VERSION SETA 516" --pd "STM32F10X_XL SETA 1"
+--list .\startup_stm32f10x_xl.lst --xref -o .\debug\startup_stm32f10x_xl.o --depend .\debug\startup_stm32f10x_xl.d "source\startup_stm32f10x_xl.s"

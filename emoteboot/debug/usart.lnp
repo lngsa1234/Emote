@@ -1,0 +1,22 @@
+--cpu Cortex-M3
+".\debug\core_cm3.o"
+".\debug\system_stm32f10x.o"
+".\debug\misc.o"
+".\debug\stm32f10x_flash.o"
+".\debug\stm32f10x_gpio.o"
+".\debug\stm32f10x_rcc.o"
+".\debug\stm32f10x_usart.o"
+".\debug\retarget.o"
+".\debug\serial.o"
+".\debug\stm32f10x_it.o"
+".\debug\usart1_conf.o"
+".\debug\startup_stm32f10x_xl.o"
+".\debug\common.o"
+".\debug\download.o"
+".\debug\main.o"
+".\debug\upload.o"
+".\debug\ymodem.o"
+".\debug\usart2_conf.o"
+--ro-base 0x08000000 --entry 0x08000000 --rw-base 0x20000000 --entry Reset_Handler --first __Vectors --strict --summary_stderr --info summarysizes --map --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\usart.map" -o .\debug\usart.axf

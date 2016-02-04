@@ -1,0 +1,72 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: µVision V5.16a
+Copyright (C) 2015 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: Ling Wang, WSU, LIC=----
+ 
+Tool Versions:
+Toolchain:       MDK-Lite  Version: 5.16a
+Toolchain Path:  D:\Keil_v5\ARM\ARMCC\Bin
+C Compiler:      Armcc.exe V5.06 (build 20)
+Assembler:       Armasm.exe V5.06 (build 20)
+Linker/Locator:  ArmLink.exe V5.06 (build 20)
+Library Manager: ArmAr.exe V5.06 (build 20)
+Hex Converter:   FromElf.exe V5.06 (build 20)
+CPU DLL:         SARMCM3.DLL V5.16a
+Dialog DLL:      DCM.DLL V1.13.2.0
+Target DLL:      UL2CM3.DLL V1.155.12.0
+Dialog DLL:      TCM.DLL V1.14.5.0
+ 
+<h2>Project:</h2>
+C:\Users\lngsa\Dropbox\emote\USART\usart.uvprojx
+Project File Date:  01/25/2016
+
+<h2>Output:</h2>
+*** Using Compiler 'V5.06 (build 20)', folder: 'D:\Keil_v5\ARM\ARMCC\Bin'
+*** Note: Rebuilding project, since 'Options->Output->Create Batch File' is selected.
+Rebuild target 'Target 1'
+compiling core_cm3.c...
+compiling system_stm32f10x.c...
+compiling misc.c...
+compiling stm32f10x_flash.c...
+compiling stm32f10x_gpio.c...
+compiling stm32f10x_rcc.c...
+compiling stm32f10x_usart.c...
+compiling Retarget.c...
+compiling Serial.c...
+source\Serial.c(42): warning:  #223-D: function "USART1_Init" declared implicitly
+    USART1_Init();
+source\Serial.c: 1 warning, 0 errors
+compiling stm32f10x_it.c...
+compiling usart1_conf.c...
+assembling startup_stm32f10x_xl.s...
+compiling common.c...
+compiling download.c...
+compiling main.c...
+source\main.c(37): warning:  #1295-D: Deprecated declaration USART2_test - give arg types
+  extern void   USART2_test();
+source\main.c: 1 warning, 0 errors
+compiling upload.c...
+compiling ymodem.c...
+compiling usart2_conf.c...
+source\usart2_conf.c(55): warning:  #9-D: nested comment is not allowed
+   /*USART1 tx: PD.5 rx: PD.6*/
+source\usart2_conf.c: 1 warning, 0 errors
+linking...
+Program Size: Code=17824 RO-data=876 RW-data=84 ZI-data=2916  
+FromELF: creating hex file...
+After Build - User command #1: fromelf --bin --output ./debug/usart.bin ./debug/usart.axf
+".\debug\usart.axf" - 0 Error(s), 3 Warning(s).
+
+<h2>Collection of Component include folders:</h2>
+  C:\Users\lngsa\Dropbox\emote\USART\RTE
+  D:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.0.0\Device\Include
+
+<h2>Collection of Component Files used:</h2>
+Build Time Elapsed:  00:00:10
+</pre>
+</body>
+</html>
