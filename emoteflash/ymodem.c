@@ -545,6 +545,7 @@ uint8_t Ymodem_Transmit (uint8_t *buf, const uint8_t* sendFileName, uint32_t siz
     do
     {
       /* Send next packet */
+      
       if (size >= PACKET_1K_SIZE)
       {
         pktSize = PACKET_1K_SIZE;
@@ -568,9 +569,7 @@ uint8_t Ymodem_Transmit (uint8_t *buf, const uint8_t* sendFileName, uint32_t siz
         tempCheckSum = CalChecksum (&packet_data[3], pktSize);
         Send_Byte(tempCheckSum);
       }
-      debug_print("package %d has sent...:%d\n",blkNumber,pktSize);      
-      for(i=0;i<20;i++)
-        debug_print("%x ",packet_data[i]);
+      debug_print("package %d has sent...:%d\r",blkNumber,pktSize);      
       /* Wait for Ack */
       if ((Receive_Byte(&receivedC[0], 100000) == 0)  && (receivedC[0] == ACK))
       {

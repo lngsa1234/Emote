@@ -40,33 +40,38 @@
 
   static int Serial_ReceiveByte(char* c, int timeout)
   {
-  	int ref = 0;
+   int ref = 0;
 
-	if(timeout == -1)
-		ref = 1;
-	while(timeout--> 0 || ref){
-		if(SerialGetChar(c)== 1)
-			return 1;
-		}
-	return 0;
+   if(timeout == -1)
+      ref = 1;
+   while(timeout-- > 0 || ref)
+   {
+     if(SerialGetChar(c)== 1)
+	return 1;
+   }
+   return 0;
   }
   
   static void SerialUpload(const char* filename)
   {
-	 
    uint32_t status = 0;
-   char c;
    FILE* fp;
-   uint32_t fileSize;
+   int32_t fileSize;
    char* buf;
    
+   debug_print("Enter function: SerialUpload...\n"); 
    if(filename == NULL)
-	return;
+   {
+     printf("no image file.\n");
+     return;
+   } 
+
    fp = fopen(filename,"r");
    if(fp<0){
-    printf("open the image file failed...");
+    printf("open the image file failed...\n");
     return;
    }
+ 
   /*get file size*/
   fseek(fp, 0, SEEK_END);
   fileSize = ftell(fp);
@@ -75,21 +80,24 @@
  /* read file into buffer*/
   buf = malloc(fileSize);
   if(buf == NULL){
-   printf("malloc buffer failed...");
+   printf("malloc buffer failed...\n");
    return;
   }
+ 
  if(fread(buf,1,fileSize,fp) != fileSize){
-  printf("read file failed...");
- }
+  printf("read file failed...\n");
+  }
  
 
- if (Serial_ReceiveByte(&c,-1) == 1 && c == CRC16){
-   	printf("Uploading the image %s to target...:%d byte\n",filename,fileSize );
+ // if (Serial_ReceiveByte(&c,-1) == 1&& c==CRC16)
+ {
+        //debug_print("%d",c);	
+        printf("Uploading image %s...\n",filename);
 	status = Ymodem_Transmit((uint8_t *)buf, (const uint8_t *)filename, fileSize);
 	if (status != 0){
-		printf("\n\rError Occured while Transmitting File!please try again!\n\r");
+		printf("Error Occured while Transmitting File!please try again!\n");
 		}else{
-		printf("\n\rFile Trasmitted Successfully \n\r");
+		printf("Total %d bytes uploaded Successfully \n", fileSize);
 		}
 		}
   free(buf);
@@ -100,53 +108,75 @@
   int main(int argc, char *argv[])
   {
     int8_t key;
-	int8_t recv;
+    int8_t recv;
     char *device, *imageFile;
-	int ret; 
-	int cnt = 100;
-	int timeout = 1;
-    
+    int cnt = 100;
+    int rep=10; 
+    /*Parameters*/    
     if( argc < 3){
     	printf("Please input image file name and serial device name: \n");
-        printf(" FORMAT: emoteflash imageFile deviceName \n");
+        printf("FORMAT: emoteflash imageFile deviceName \n");
     	return 0;
     }else{
-    		imageFile = argv[1];
-    		device = argv[2];
+    	imageFile = argv[1];
+    	device = argv[2];
     }
-
-	printf("Emoteflash stm32 flash progrmming version 1.0.0.....\n");
    
-    ret= SerialInt(device);
-    if(ret <0){
-		printf("serial port init failed...\n");
-		return 0;
+    /*Print version information*/
+    printf("Emoteflash stm32 flash progrmming version 1.0.0.....\n");
+    /*Init serial port*/
+    if(SerialInt(device)<0)
+    {
+	printf("serial port init failed...\n");
+	return 0;
     }
 
-	key = 0x1C; /*send to application to restart*/
+    while(cnt-->0)
+    {
 
-	key =0x1D;/*send to bootloader*/
-	/* repeatly send key until receive response from bootloader or timeout*/
-	while(cnt--){
-	 debug_print("send sync information ...\n");	
-	 ret= SerialPutChar(key);
-	 if(ret != 1)
-	 {
-	   printf("write key falied...%d\n",ret);
-	 }
+	key = 0x4C; /*send to application to restart*/
+        if(SerialPutChar(key)!=1)
+        {
+          printf("send byte %c faild.\n", key);
+        }else
+        {
+          debug_print("sending restart command...\n "); 
+        }
+        /* Read and show any byte from serial port*/
+	 
+        if(Serial_ReceiveByte((char *)&recv,10) == 1)
+ 
+           printf("%c",recv);
 
-	 while(Serial_ReceiveByte((char *)&recv,timeout) == 1){
-		if(recv== 0x1E){
-			debug_print("Ack received...\n");
-			SerialUpload(imageFile);
-			SerialClose();
-			return 1;
-			}else
-			printf("%c",recv);
-			}
+        while(Serial_ReceiveByte((char *)&recv,1) == 1)
+        {
+           printf("%c",recv);
+	}
+        key =0x44;/*send to bootloader*/
+        if(SerialPutChar(key)!=1)
+        {
+          printf("send byte %c faild.\n", key);
+        }
+        /* Read and show any byte from serial port*/
+       rep=10; 
+       while(rep-->0)	
+       {
+        debug_print("send %d\n", 10-rep);        
+        if(Serial_ReceiveByte((char *)&recv,1) == 1)
+        {
+	  debug_print("Ack received...\n");
+          SerialUpload(imageFile);
+          SerialClose();
+	  return 1;
 	 }
-	   
-	return 1;
+        else
+        if(SerialPutChar(key)!=1)
+        {
+          printf("send byte %c faild.\n", key);
+         }  
+       }  
+    }
+   return 1;
   }
 
   
