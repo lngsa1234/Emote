@@ -15,5 +15,6 @@
 .\objects\main.o: ./emlib/stm32f10x_rcc.h
 .\objects\main.o: ./emlib/stm32f10x_usart.h
 .\objects\main.o: ./emlib/misc.h
+.\objects\main.o: ./emlib/eeprom.h
 .\objects\main.o: src\ymodem.h
 .\objects\main.o: src\uart.h

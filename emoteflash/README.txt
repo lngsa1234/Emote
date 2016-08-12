@@ -1,5 +1,14 @@
 
-usage:emoteflash imagefile /dev/ttyUSB1
+Development System:
+Ubuntu 12.04 above
+
+Compiling:
+$make
+
+usage:
+$emoteflash imagefile moteid /dev/ttyUSB1
+
+Note:
 
 Before you use it, you have to be sure that the USB is working.
 

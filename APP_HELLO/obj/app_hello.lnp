@@ -6,11 +6,13 @@
 ".\obj\stm32f10x_it.o"
 ".\obj\serial.o"
 ".\obj\usart1_conf.o"
+".\obj\common.o"
 ".\obj\misc.o"
 ".\obj\stm32f10x_flash.o"
 ".\obj\stm32f10x_gpio.o"
 ".\obj\stm32f10x_rcc.o"
 ".\obj\stm32f10x_usart.o"
+".\obj\eeprom.o"
 --strict --scatter ".\obj\app_hello.sct"
 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

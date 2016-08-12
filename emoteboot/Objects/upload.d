@@ -15,4 +15,5 @@
 .\objects\upload.o: ./emlib/stm32f10x_rcc.h
 .\objects\upload.o: ./emlib/stm32f10x_usart.h
 .\objects\upload.o: ./emlib/misc.h
+.\objects\upload.o: ./emlib/eeprom.h
 .\objects\upload.o: src\ymodem.h

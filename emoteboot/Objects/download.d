@@ -15,4 +15,5 @@
 .\objects\download.o: ./emlib/stm32f10x_rcc.h
 .\objects\download.o: ./emlib/stm32f10x_usart.h
 .\objects\download.o: ./emlib/misc.h
+.\objects\download.o: ./emlib/eeprom.h
 .\objects\download.o: src\ymodem.h

@@ -1,19 +1,14 @@
 # emote
-STM32 embedded development. Include flash programming in Linux, bootloader on STM32 board, Tinyos v2.1 supporting STM32 and Keil Project.
 
-This project is to support tinyos download from bootloader. 
+This project is aimed to develop emote board bootloader and Linux-based flashing program.
 
-Two main parts are included: emoteflash and emote bootloader.
+There are three sub-projects in three separate folders.
 
-Emoteflash runs in Linux enrionment. It functions like a flash programming.
+1. Emoteboot, emote board bootloader project( running with Windows+Keil development environments)
 
-Emote bootloader is a Keil Project. The bootloader program can be directly downloaded to board by keil via JTAG.
+2. Emoteflash, flashing program (running in Ubuntu)
 
-In order to support debugging, you have two options: using serial port or using keil.
+3. APP_HELLO, hello world program, contiki system can refer it to use UART port and read mote it (running with Windows+Keil development environments)
 
-TinyOS-STM-v0.9b is a linux based sourece code. Uart component is added into this code. 
-You can use uart component to debug your code with serail port.
-
-Tinyos-stm32-keil is a keil project. It supports debugging tinyos via keil. You can compile your tinyos code in Linux first. 
-Then use the appmangle.pl script (included in TinyOS-STM-v0.9b)to convert app.c into the format supported by Keil. Then use keil
-to debug your tinyos.  
+If you would like to customize these programs, you can find all source codes in the corresponding folders; otherwise, you can obtain all installation files via the folder /emoteinstall. 
+More development and installation details can be found in readme.txt files located in each individual folder. 

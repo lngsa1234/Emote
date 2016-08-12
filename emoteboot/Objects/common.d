@@ -15,5 +15,5 @@
 .\objects\common.o: ./emlib/stm32f10x_rcc.h
 .\objects\common.o: ./emlib/stm32f10x_usart.h
 .\objects\common.o: ./emlib/misc.h
+.\objects\common.o: ./emlib/eeprom.h
 .\objects\common.o: src\ymodem.h
-.\objects\common.o: src\serial.h

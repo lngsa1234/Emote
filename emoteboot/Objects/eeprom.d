@@ -1,0 +1,15 @@
+.\objects\eeprom.o: emlib\eeprom.c
+.\objects\eeprom.o: emlib\eeprom.h
+.\objects\eeprom.o: ./cmsis/stm32f10x.h
+.\objects\eeprom.o: ./cmsis/core_cm3.h
+.\objects\eeprom.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\eeprom.o: ./cmsis/core_cmInstr.h
+.\objects\eeprom.o: ./cmsis/core_cmFunc.h
+.\objects\eeprom.o: ./cmsis/system_stm32f10x.h
+.\objects\eeprom.o: ./src/stm32f10x_conf.h
+.\objects\eeprom.o: ./emlib/stm32f10x_flash.h
+.\objects\eeprom.o: ./cmsis/stm32f10x.h
+.\objects\eeprom.o: ./emlib/stm32f10x_gpio.h
+.\objects\eeprom.o: ./emlib/stm32f10x_rcc.h
+.\objects\eeprom.o: ./emlib/stm32f10x_usart.h
+.\objects\eeprom.o: ./emlib/misc.h

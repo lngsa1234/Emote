@@ -1,0 +1,16 @@
+.\obj\eeprom.o: emlib\eeprom.c
+.\obj\eeprom.o: emlib\eeprom.h
+.\obj\eeprom.o: emlib\stm32f10x.h
+.\obj\eeprom.o: D:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cm3.h
+.\obj\eeprom.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\obj\eeprom.o: D:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmInstr.h
+.\obj\eeprom.o: D:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\cmsis_armcc.h
+.\obj\eeprom.o: D:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmFunc.h
+.\obj\eeprom.o: emlib\system_stm32f10x.h
+.\obj\eeprom.o: ..\APP_HELLO\stm32f10x_conf.h
+.\obj\eeprom.o: .\emlib\stm32f10x_gpio.h
+.\obj\eeprom.o: .\emlib\stm32f10x.h
+.\obj\eeprom.o: .\emlib\stm32f10x_rcc.h
+.\obj\eeprom.o: .\emlib\stm32f10x_usart.h
+.\obj\eeprom.o: .\emlib\misc.h
+.\obj\eeprom.o: emlib\stm32f10x_flash.h

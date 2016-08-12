@@ -24,21 +24,15 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "common.h"
-#include "ymodem.h"
-#include "serial.h"
+//#include "ymodem.h"
+//#include "serial.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-pFunction Jump_To_Application;
-uint32_t JumpAddress;
-uint32_t BlockNbr = 0, UserMemoryMask = 0;
-__IO uint32_t FlashProtection = 0;
-extern uint32_t FlashDestination;
+extern uint32_t FlashDestination;	
 
-/* Private function prototypes -----------------------------------------------*/
-/* Private functions ---------------------------------------------------------*/
 void assert_failed(uint8_t * file, uint32_t line)
 {
 	while(1)
@@ -51,6 +45,7 @@ void assert_failed(uint8_t * file, uint32_t line)
   * @param  intnum: The intger to be converted
   * @retval None
   */
+
 void Int2Str(uint8_t* str, int32_t intnum)
 {
   uint32_t i, Div = 1000000000, j = 0, Status = 0;
@@ -79,6 +74,7 @@ void Int2Str(uint8_t* str, int32_t intnum)
   * @retval 1: Correct
   *         0: Error
   */
+
 uint32_t Str2Int(uint8_t *inputstr, int32_t *intnum)
 {
   uint32_t i = 0, res = 0;
@@ -163,48 +159,13 @@ uint32_t Str2Int(uint8_t *inputstr, int32_t *intnum)
 }
 
 /**
-  * @brief  Get an integer from the HyperTerminal
-  * @param  num: The inetger
-  * @retval 1: Correct
-  *         0: Error
-  */
-uint32_t GetIntegerInput(int32_t * num)
-{
-  uint8_t inputstr[16];
-
-  while (1)
-  {
-    GetInputString(inputstr);
-    if (inputstr[0] == '\0') continue;
-    if ((inputstr[0] == 'a' || inputstr[0] == 'A') && inputstr[1] == '\0')
-    {
-      SerialPutString("User Cancelled \r\n");
-      return 0;
-    }
-
-    if (Str2Int(inputstr, num) == 0)
-    {
-      SerialPutString("Error, Input again: \r\n");
-    }
-    else
-    {
-      return 1;
-    }
-  }
-}
-
-/**
   * @brief  Test to see if a key has been pressed on the HyperTerminal
   * @param  key: The key pressed
   * @retval 1: Correct
   *         0: Error
   */
-/*extern uint32_t Loader_GetByte(uint8_t *key);*/
 uint32_t SerialGetChar(uint8_t *key)
 {
-
-  /*return Loader_GetByte(key);*/
-
   if ( USART_GetFlagStatus(USART1, USART_FLAG_RXNE) != RESET)
   {
     *key = (uint8_t)USART1->DR;
@@ -216,7 +177,6 @@ uint32_t SerialGetChar(uint8_t *key)
   }
   
 }
-
 
 int32_t Serial_ReceiveByte(uint8_t *c, int32_t timeout)
 {
@@ -251,13 +211,12 @@ void SerialPutChar(uint8_t c)
   * @param  s: The string to be printed
   * @retval None
   */
-/*extern void USART_To_USB_Send_Data(uint8_t c);*/
+
 void Serial_PutString(uint8_t *s)
 {
   while (*s != '\0')
   {
     SerialPutChar(*s);
-	  /*USART_To_USB_Send_Data(*s);*/
     s++;
   }
 }
@@ -267,40 +226,19 @@ void Serial_PutString(uint8_t *s)
   * @param  buffP: The input string
   * @retval None
   */
-void GetInputString (uint8_t * buffP)
+ 
+uint32_t GetInputString (uint8_t * buffP)
 {
   uint32_t bytes_read = 0;
   uint8_t c = 0;
-  do
-  {
-    /*c = GetKey();*/
-		SerialGetChar(&c);
-    if (c == '\r')
-      break;
-    if (c == '\b') /* Backspace */
-    {
-      if (bytes_read > 0)
-      {
-        SerialPutString("\b \b");
-        bytes_read --;
-      }
-      continue;
-    }
-    if (bytes_read >= CMD_STRING_SIZE )
-    {
-      SerialPutString("Command string size overflow\r\n");
-      bytes_read = 0;
-      continue;
-    }
-    if (c >= 0x20 && c <= 0x7E)
-    {
-      buffP[bytes_read++] = c;
-      SerialPutChar(c);
-    }
-  }
-  while (1);
-  SerialPutString(("\n\r"));
-  buffP[bytes_read] = '\0';
+	
+  while(Serial_ReceiveByte(&c,100000)==1)
+	{
+		 buffP[bytes_read++]=c;
+		 SerialPutChar(c);
+	 }
+	buffP[bytes_read] = '\0';
+	return bytes_read;
 }
 
 /**
@@ -335,6 +273,8 @@ void FLASH_DisableWriteProtectionPages(void)
   uint32_t useroptionbyte = 0, WRPR = 0;
   uint16_t var1 = OB_IWDG_SW, var2 = OB_STOP_NoRST, var3 = OB_STDBY_NoRST;
   FLASH_Status status = FLASH_BUSY;
+	uint32_t UserMemoryMask = 0;
+__IO uint32_t FlashProtection = 0;
 
   WRPR = FLASH_GetWriteProtectionOptionByte();
 
@@ -392,15 +332,10 @@ void FLASH_DisableWriteProtectionPages(void)
   }
 }
 
-/**
-  * @brief  Display the Main Menu on to HyperTerminal
-  * @param  None
-  * @retval None
-  */
-int32_t Menu(void)
+uint32_t FlashProtectionStatus()
 {
-	uint32_t res = 1;
-  uint8_t key = 0;
+	uint32_t BlockNbr = 0, UserMemoryMask = 0;
+__IO uint32_t FlashProtection = 0;
 
   /* Get the number of block (4 or 2 pages) from where the user program will be loaded */
   BlockNbr = (FlashDestination - 0x08000000) >> 12;
@@ -430,69 +365,6 @@ int32_t Menu(void)
   {
     FlashProtection = 0;
   }
-	
-	while(1)
-	{
-		
-		SerialPutString("\r\n================== Main Menu ============================\r\n\n");
-		SerialPutString("  Download Image To the STM32F10x Internal Flash ------- 1\r\n\n");
-		SerialPutString("  Upload Image From the STM32F10x Internal Flash ------- 2\r\n\n");
-		SerialPutString("  Execute The New Program ------------------------------ 3\r\n\n");
-		
-		if(FlashProtection != 0)
-		{
-			SerialPutString("  Disable the write protection ------------------------- 4\r\n\n");
-		}
-		
-		SerialPutString("==========================================================\r\n\n");
-		
-		/* Send back received byte*/
-		if(Serial_ReceiveByte(&key,-1))
-			SerialPutChar(key);
-	  
-		if (key == 0x31)
-		{
-			return SerialDownload();
-		}
-		else if (key == 0x32)
-		{
-			return SerialUpload();
-		}
-		else if (key == 0x33)
-		{
-			return res;
-		}
-		else if ((key == 0x34) && (FlashProtection == 1))
-		{
-			/* Disable the write protection of desired pages */
-			FLASH_DisableWriteProtectionPages();
-		}
-		else
-		{
-			if (FlashProtection == 0)
-			{
-				SerialPutString("Invalid Number ! ==> The number should be either 1, 2 or 3\r");
-			}
-			else
-			{
-				SerialPutString("Invalid Number ! ==> The number should be either 1, 2, 3 or 4\r");
-			} 
-		}
-   }
- }
-
-void Jump_to_app()
-{
-	if (((*(__IO uint32_t*)ApplicationAddress) & 0x2FFE0000 ) == 0x20000000)
-			{
-				
-			  JumpAddress = *(__IO uint32_t*) (ApplicationAddress + 4);
-
-				/* Jump to user application */
-				Jump_To_Application = (pFunction) JumpAddress;
-				/* Initialize user application's Stack Pointer */
-				__set_MSP(*(__IO uint32_t*) ApplicationAddress);
-				Jump_To_Application();
-			}
+	return FlashProtection;
 }
 

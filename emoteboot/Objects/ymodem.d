@@ -15,4 +15,5 @@
 .\objects\ymodem.o: ./emlib/stm32f10x_rcc.h
 .\objects\ymodem.o: ./emlib/stm32f10x_usart.h
 .\objects\ymodem.o: ./emlib/misc.h
+.\objects\ymodem.o: ./emlib/eeprom.h
 .\objects\ymodem.o: src\ymodem.h
