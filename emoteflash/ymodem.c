@@ -456,7 +456,7 @@ void Ymodem_SendPacket(uint8_t *data, uint16_t length)
 	{
 
 		Send_Byte(data[i]);
-		debug_print("%x ",data[i]);
+		//debug_print("%x ",data[i]);
 		i++;
 	}
 #else

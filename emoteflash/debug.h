@@ -23,7 +23,7 @@
 #ifndef _DEBUG_H
 #define _DEBUG_H
 
-#define DEBUG 0 
+#define DEBUG 1 
 #define debug_print(args...) if(DEBUG) printf(args);
 	
 #endif 

@@ -30,18 +30,23 @@
 #include "debug.h"
 
 
-#define TIMEOUT 10
+#define TIMEOUT 100
+#define REPEAT_TIME 2
+
 #define COMMAND_RESTART      0x4c  
 #define COMMAND_DOWNLOAD     0x44
 #define COMMAND_SEND_MOTEID  0x4D  
 #define COMMAND_MOTESYNC     0x16  
 #define COMMAND_ACK          0x06
 
-/* uart interrpt function*/
+#define PROGRAM_NAME "EMOTEFLASH"
+
+/*
 void signal_handler_IO (int status)
 {
 
 }
+*/
 
 static int Serial_ReceiveByte(char* c, int timeout)
 {
@@ -64,16 +69,11 @@ static uint32_t SerialUpload(const char* filename)
 	int32_t fileSize;
 	char* buf;
 
-	debug_print("Enter function: SerialUpload...\n"); 
-	if(filename == NULL)
-	{
-		printf("no image file.\n");
-		return -1;
-	} 
+	debug_print("[%s]DEBUG:enter function %s.\n", PROGRAM_NAME, __func__); 
 
 	fp = fopen(filename,"r");
-	if(fp<0){
-		printf("open the image file failed...\n");
+	if( fp == NULL){
+		printf("[%s]ERROR:open image file failed...\n", PROGRAM_NAME);
 		return -1;
 	}
 
@@ -97,7 +97,7 @@ static uint32_t SerialUpload(const char* filename)
 	// if (Serial_ReceiveByte(&c,-1) == 1&& c==CRC16)
 	{
 		//debug_print("%d",c);	
-		printf("Uploading image %s...\n",filename);
+		printf("[%s]INFO:uploading image %s...\n", PROGRAM_NAME, filename);
 		status = Ymodem_Transmit((uint8_t *)buf, (const uint8_t *)filename, fileSize);
 		if (status != 0){
 			printf("Error Occured while Transmitting File!please try again!\n");
@@ -116,17 +116,19 @@ int main(int argc, char *argv[])
 	int8_t key;
 	int8_t recv;
 	char *device, *imageFile;
-	int cnt = 5;
-	int rep = 5; 
+	int cnt = 0;
+	int rep = 0; 
 	uint32_t i = 0;
 	uint16_t moteid = 0;
 	char sbuf[8];
+	FILE *fp;
+	int readings = 0;
 
 	/*Parameters*/    
-	if( argc < 4){
+	if (argc < 4){
 		printf("Please input image file name and serial device name: \n");
 		printf("FORMAT: emoteflash imageFile moteid deviceName \n");
-		return 0;
+		exit(-1);
 	}else{
 		imageFile = argv[1];
 		moteid = atoi(argv[2]);
@@ -136,30 +138,49 @@ int main(int argc, char *argv[])
 
 	/*Print version information*/
 	printf("Emoteflash stm32 flash progrmming version 1.0.0, COPYRIGHT DNC 2016.\n");
+       
+        /*verify if image file exits or readable */	
+	fp = fopen(imageFile,"r");
+	if (fp == NULL) {
+		printf("open the image file failed...\n");
+		exit(-1);
+	}
+	fclose(fp);
+        fp = NULL;
+
 	/*Init serial port*/
-	if(SerialInt(device)<0)
+	if (SerialInt(device)<0)
 	{
 		printf("serial port init failed...\n");
-		return 0;
+		exit(-1);
 	}
 
-	while(cnt-->0)
+	while (cnt++ < REPEAT_TIME)
 	{
 
 		key = 0x4C; /*send to application to restart*/
 		if(SerialPutChar(key)!=1)
 		{
-			printf("send byte %c faild.\n", key);
+			printf("[%s] ERROR:send byte %c faild.\n", PROGRAM_NAME, key);
+			SerialClose();
+			exit(-1);
 		}else
 		{
-			debug_print("sending restart command...\n "); 
+			debug_print("[%s]DEBUG:sending restart command..., %d time\n ", PROGRAM_NAME, cnt); 
 		}
 
 		/* Read and show the first byte from serial port*/
 		if(Serial_ReceiveByte((char *)&recv, 100) == 1)
 			printf("%c",recv);
-
-		while(Serial_ReceiveByte((char *)&recv, 1) == 1)
+		else{
+			
+			printf("[%s]ERROR:receive no response from emote and is exiting.\n", PROGRAM_NAME);
+			SerialClose();
+			exit(-1);
+		}
+                
+                /*i++ < 1000; fix the bug when app doesn't restart and print constantly*/
+		while(Serial_ReceiveByte((char *)&recv, 1) == 1 && (readings++ < 1000))
 		{
 			printf("%c",recv);
 		}
@@ -167,50 +188,60 @@ int main(int argc, char *argv[])
 		key =0x44;/*send to bootloader to request downloading*/
 		if(SerialPutChar(key)!=1)
 		{
-			printf("send byte %c faild.\n", key);
+			printf("[%s]ERROR:send byte %c faild.\n", PROGRAM_NAME, key);
+			SerialClose();
+			exit(-1);
 		}
-		printf("[Server]sending request emote to for dowloading...\n");
+		printf("[%s]INFO:sending request to emote for dowloading...\n", PROGRAM_NAME);
 
 		/* Read and show any byte from serial port*/
-		rep=10; 
-		while(rep-->0)	
+		while (rep++ < REPEAT_TIME)	
 		{
-			debug_print("send %d\n", 10-rep);        
-			if(Serial_ReceiveByte((char *)&recv, TIMEOUT) == 1)/*receive repsonse*/
+			debug_print("[%s]DEBUG:wait to receive ack from emote, %d time\n", PROGRAM_NAME, rep);        
+			if(Serial_ReceiveByte((char *)&recv, TIMEOUT) == 1 && recv == 0x06)/*receive repsonse*/
 			{
-				printf("[Server] recive ack response from emote...\n");
+				printf("[%s]INFO:receive ack response 0x%x from emote...\n", PROGRAM_NAME, recv);
 				if(SerialUpload(imageFile)==0)
 				{ 
-                                        SerialPutChar(0x4D);
-                                        if(Serial_ReceiveByte((char *)&recv, TIMEOUT) == 1 && recv == 0x52);
+					SerialPutChar(0x4D);
+					if(Serial_ReceiveByte((char *)&recv, TIMEOUT) == 1 && recv == 0x52);
 					{  
 						sprintf(sbuf,"%d", moteid);
 						debug_print("%s \n", sbuf);
-				                printf("[Server] sending mote id to emote....\n");
+						printf("[%s]INFO:sending mote id to emote....\n", PROGRAM_NAME);
 						while(sbuf[i] != '\0')
 						{
 							SerialPutChar(sbuf[i++]);
 						}
-					
-					        while(Serial_ReceiveByte((char *)&recv, TIMEOUT) == 1 && recv !=0x16)
-                                                {
-					        	printf("%c", recv);
+
+						while(Serial_ReceiveByte((char *)&recv, TIMEOUT) == 1 && recv !=0x16)
+						{
+							printf("%c", recv);
 						}
-                                                if( recv == 0x16)
-						printf("\nEmote image update has been done successfully.\n");
-                                                else
-                                                printf("\nEmote image update failed.Please try again.\n");
+						if( recv == 0x16)
+							printf("\n[%s]INFO:emote image update has been done successfully.\n", PROGRAM_NAME);
+						else {
+							printf("\n[%s]INFO:emote image update failed.Please try again.\n", PROGRAM_NAME);
+							SerialClose();
+							exit(-1);
+						}
 					}
+
+                                        
 				}
-				SerialClose();
-				return 1;
+					SerialClose();
+					return 0;
+                                
 			}
 			else if(SerialPutChar(key)!=1) /*send request again if not responded*/
 			{
-				printf("send byte %c faild.\n", key);
+				printf("[%s]ERROR:send byte %c faild.\n", PROGRAM_NAME, key);
+				SerialClose();
+				exit(-1);
 			}  
 		}  
 	}
+	SerialClose();
 	return 1;
 }
 

@@ -28,7 +28,7 @@
 #include <sys/signal.h>
 #include "serial_posix.h"
 
-extern void signal_handler_IO (int status);    //definition of signal handler
+//extern void signal_handler_IO (int status);    //definition of signal handler
 
 serial_t *serial_open(const char *device)
 {
@@ -38,10 +38,11 @@ serial_t *serial_open(const char *device)
 		free(h);
 		return NULL;
 	}
+	
 	fcntl(h->fd, F_SETFL, 0);
 
 	tcgetattr(h->fd, &h->oldtio);
-	tcgetattr(h->fd, &h->newtio);
+	//tcgetattr(h->fd, &h->newtio);
 
 	return h;
 }
@@ -82,7 +83,7 @@ int serial_setup(serial_t *h,speed_t port_baud,tcflag_t port_bits,tcflag_t port_
 	h->newtio.c_cflag |= CREAD;
 
 	h->newtio.c_cc[VMIN] = 0;
-	h->newtio.c_cc[VTIME] = 5;	/* in units of 0.1 s */
+	h->newtio.c_cc[VTIME] = 1;	/* in units of 0.1 s */
 
 	/* set the settings */
 	serial_flush(h);
@@ -99,7 +100,7 @@ int serial_setup(serial_t *h,speed_t port_baud,tcflag_t port_bits,tcflag_t port_
 
 	return 0;
 }
-
+/*
 void serial_it_config(serial_t *h){
 	struct sigaction saio;  
 	//install the serial handler before making the device asynchronous
@@ -116,6 +117,7 @@ void serial_it_config(serial_t *h){
 	fcntl(h->fd, F_SETFL, FASYNC);
 
 }
+*/
 int serial_read(const serial_t *h, void *buf,size_t nbyte)
 {
 	ssize_t r;
