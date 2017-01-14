@@ -22,57 +22,74 @@
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
 #include <unistd.h>
 
 #include "serial_posix.h"
 #include "serial.h"
 
+#define PROGRAM_NAME "EMOTEMONITOR"
 
+bool data_flag = false;
+char buf[256];
 
 FILE* fpin;
 FILE* fpout;
 
+/*
+   static void Serial_ReceiveByte()
+   {
+   char c;
+   if(SerialGetChar(&c)== 1)
+   {
+   fwrite(&c, 1, sizeof(char), fpout);
+   printf("%c", c);
+   }
+   }
+ */
 
-static void Serial_ReceiveByte()
+void read_serial_data()
 {
-	char c;
-	if(SerialGetChar(&c)== 1)
-	    {
-               fwrite(&c, 1, sizeof(char), fpout);
-		printf("%c", c);
-	    }
+	int bytes;
+	bytes = SerialRead(buf, 256);
+	if (bytes > 0){
+		//fwrite(buf, bytes, sizeof(char), stdout);
+   		fwrite(buf, bytes, sizeof(char), fpout);
+	}else{
+		printf("[%s]%s:read serial data error occured, code = %d\n", PROGRAM_NAME, __func__, bytes);
+		exit(-1);
+	}
 }
+
 
 /* uart interrpt function*/
 void signal_handler_IO (int status)
 {
-	Serial_ReceiveByte();
+	//Serial_ReceiveByte();
+	data_flag = true;
 }
 
 int main(int argc, char *argv[])
 {
 	char* device;
-	char* infile;
-        char* outfile;
-        struct timeval start, stop;
-        int cnt = 100;
-        int runtime=0;
+	char* outfile;
+	struct timeval start, stop;
+	int runtime = 0;
 	int elapsetime = 0;
 
-	gettimeofday(&start, NULL);
 	/*Parameters*/    
 	if( argc < 4){
-		printf("FORMAT: emotemonitor runtime  outfile serialdev \n");
-		return 0;
+		printf("[%s]FORMAT: emotemonitor runtime  outfile serialport. \n", PROGRAM_NAME);
+		exit(-1);
 	}else{
 		runtime = atoi(argv[1]);
 		outfile = argv[2];
 		device = argv[3];
-
 	}
 
 	/*Print version information*/
-	printf("Emote monitor version 1.0.0, COPYRIGHT DNC 2016.\n");
+	printf("[%s]emote monitor version 2.0.0, COPYRIGHT (C) DNC 2016.\n", PROGRAM_NAME);
 
 	/*Open input file*/
 
@@ -81,27 +98,38 @@ int main(int argc, char *argv[])
 	if(fpout == NULL)
 	{
 		fclose(fpout);
-		printf("Fail to Open log file %s.\n",infile);
+		printf("[%s]ERROR:fail to open log file %s.\n", PROGRAM_NAME, outfile);
+		exit(-1);
 	}
 
 	/*Open serial port*/
 	if(SerialInt(device) < 0)
 	{
-		printf("Fail to open serial port %s.\n", device);
-		return 0;
+		printf("[%s]ERROR:fail to open serial port %s.\n", PROGRAM_NAME, device);
+		exit(-1);
 	}
 
-	while( elapsetime < runtime)
+
+	gettimeofday(&start, NULL);
+	while (elapsetime < runtime)
 	{
-		sleep(10);
-                gettimeofday(&stop, NULL);
-		elapsetime = (stop.tv_sec - start.tv_sec)/60 +1;
+		if (data_flag == true){
+			data_flag = false;
+			read_serial_data();
+		}
+		gettimeofday(&stop, NULL);
+		elapsetime = (stop.tv_sec - start.tv_sec)/60;
 	}
-        printf("Monitor is ending.\n");
 
-        fclose(fpout);
+
+	/*close file and serial device*/
+	fclose(fpout);
 	SerialClose();
-	return 1;
+	fpout = NULL;
+
+	printf("[%s]INFO: monitor has finished.\n", PROGRAM_NAME);
+
+	return 0;
 }
 
 

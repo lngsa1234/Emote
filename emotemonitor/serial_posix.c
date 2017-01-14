@@ -34,6 +34,7 @@ serial_t *serial_open(const char *device)
 {
 	serial_t *h = calloc(sizeof(serial_t), 1);
 	h->fd = open(device, O_RDWR | O_NOCTTY | O_NDELAY);
+	//h->fd = open(device, O_RDWR | O_NOCTTY);
 	if (h->fd < 0) {
 		free(h);
 		return NULL;
@@ -41,7 +42,7 @@ serial_t *serial_open(const char *device)
 	fcntl(h->fd, F_SETFL, 0);
 
 	tcgetattr(h->fd, &h->oldtio);
-	tcgetattr(h->fd, &h->newtio);
+	//tcgetattr(h->fd, &h->newtio);
 
 	return h;
 }
@@ -63,26 +64,36 @@ int serial_setup(serial_t *h,speed_t port_baud,tcflag_t port_bits,tcflag_t port_
 {
 
 	struct termios settings;
-	cfmakeraw(&h->newtio);	
+#if 1
+	cfmakeraw(&h->newtio);
+/*	
+        printf("input flag: 0x%x \n", h->newtio.c_iflag);
+        printf("output flag: 0x%x \n", h->newtio.c_oflag);
+        printf("local flag: 0x%x \n", h->newtio.c_lflag);
+        printf("control flag: 0x%o \n", h->newtio.c_cflag);
+*/
 	h->newtio.c_iflag &=~(IXON | IXOFF | IXANY);
 	h->newtio.c_iflag &=~(INLCR | IGNCR | ICRNL);
-
 	h->newtio.c_cflag &= ~PARENB;
 	h->newtio.c_cflag &= ~CSTOPB;
 	h->newtio.c_cflag &= ~CSIZE;
-	h->newtio.c_cflag &= ~HUPCL; 
+	h->newtio.c_cflag &= ~HUPCL;
+ 
 	h->newtio.c_oflag &= ~OPOST;
 
 	h->newtio.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
+	
+	h->newtio.c_cc[VMIN] = 1;
+	h->newtio.c_cc[VTIME] = 1;	/* in units of 0.1 s */
+#else
+        bzero(&h->newtio, sizeof(h->newtio));
+	h->newtio.c_lflag |= ICANON;
+#endif
 	/* setup the new settings */
 	cfsetispeed(&h->newtio, port_baud);
-	cfsetospeed(&h->newtio, port_baud);
 	h->newtio.c_cflag |= port_bits;
 	h->newtio.c_cflag |= CLOCAL;
 	h->newtio.c_cflag |= CREAD;
-
-	h->newtio.c_cc[VMIN] = 0;
-	h->newtio.c_cc[VTIME] = 5;	/* in units of 0.1 s */
 
 	/* set the settings */
 	serial_flush(h);
@@ -96,7 +107,12 @@ int serial_setup(serial_t *h,speed_t port_baud,tcflag_t port_bits,tcflag_t port_
 			settings.c_cflag != h->newtio.c_cflag ||
 			settings.c_lflag != h->newtio.c_lflag)
 		return -1;
-
+/*
+        printf("[%s]input flag: 0x%x \n", __func__,h->newtio.c_iflag);
+        printf("[%s]output flag: 0x%x \n",__func__, h->newtio.c_oflag);
+        printf("[%s]local flag: 0x%x \n",__func__, h->newtio.c_lflag);
+        printf("[%s]control flag: 0x%o \n",__func__, h->newtio.c_cflag);
+*/
 	return 0;
 }
 
@@ -120,11 +136,10 @@ int serial_read(const serial_t *h, void *buf,size_t nbyte)
 {
 	ssize_t r;
 	uint8_t *pos = (uint8_t *)buf;
-	int cnt = 0;
 
 	if (h == NULL)
 		return -1;
-
+/*
 	while (nbyte) {
 		r = read(h->fd, pos, nbyte);
 		if (r == 0)
@@ -137,16 +152,20 @@ int serial_read(const serial_t *h, void *buf,size_t nbyte)
 		cnt += r;
 	}
 	return cnt;
+*/
+	r = read(h->fd, pos, nbyte);
+	
+	return r;
 }
 
 int serial_write(const serial_t *h,void *buf,size_t nbyte)
 {
 	ssize_t r;
 	const uint8_t *pos = (const uint8_t *)buf;
-	int cnt=0;
 
 	if (h == NULL)
 		return -1;
+/*
 	while (nbyte) {
 		r = write(h->fd, pos, nbyte);
 		if (r < 1)
@@ -158,4 +177,8 @@ int serial_write(const serial_t *h,void *buf,size_t nbyte)
 
 	}
 	return cnt;
+*/
+
+		r = write(h->fd, pos, nbyte);
+		return r;
 }

@@ -1,6 +1,7 @@
+VERSION = 2.0.0
+
 PREFIX = /usr/local
 CFLAGS += -Wall -g
-
 INSTALL = install
 
 SOURCE =serial_posix.c	\
@@ -11,11 +12,11 @@ OBJS =	serial_posix.o	\
 	main.o		
 
 DEPS = serial.h serial_posix.h
-all: emotemonitor
+all: emotemonitor-$(VERSION)
 
 %.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
-emotemonitor: $(OBJS) 
+emotemonitor-$(VERSION): $(OBJS) 
 	$(CC) $(LDFLAGS) -o $@ $(OBJS)
 
 clean:
