@@ -33,14 +33,14 @@ int SerialInt(char *device)
 	tcflag_t port_stop = 0;        /*1 stop bit*/
 	h = serial_open(device);
 	if(h == NULL){
-		printf(" can not open the device.\n");
+		printf(" can not open the device.");
 		return -1;
 	}
 
-	serial_it_config(h);
+	/*serial_it_config(h);*/
 
 	if ( serial_setup(h,port_baud,port_bits,port_parity,port_stop)!= 0 ){
-		printf(" device initialization failed.\n");
+		printf(" device initialization failed.");
 		return -1;
 	}
 

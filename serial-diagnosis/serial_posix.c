@@ -29,6 +29,9 @@
 #include <errno.h>
 #include "serial_posix.h"
 
+//extern void signal_handler_IO (int status);    //definition of signal handler
+
+void dump_info(serial_t *h);
 
 serial_t *serial_open(const char *device)
 {
@@ -95,13 +98,14 @@ int serial_setup(serial_t *h,speed_t port_baud,tcflag_t port_bits,tcflag_t port_
 			settings.c_cflag != h->newtio.c_cflag ||
 			settings.c_lflag != h->newtio.c_lflag)
 		return -1;
+        /*debug*/
+	dump_info(h);
 	return 0;
 }
 
-void serial_configinfo(serial_t *h)
+void dump_info(serial_t *h)
 {
 	int flag = fcntl(h->fd, F_GETFL);
-	printf("fd: 0%o.\n", h->fd);	
 	printf("flag: 0%o.\n", flag);	
 	printf("old attr input: 0%o.\n", h->oldtio.c_iflag);	
 	printf("old attr output: 0%o.\n", h->oldtio.c_oflag);	

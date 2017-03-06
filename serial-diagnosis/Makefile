@@ -1,28 +1,33 @@
-VERSION = 3.0.0
-
+VERSION = diagnosis
 PREFIX = /usr/local
 CFLAGS += -Wall -g
+
 INSTALL = install
 
 SOURCE =serial_posix.c	\
+	serial.c		\
+	ymodem.c	\
 	main.c	
 OBJS =	serial_posix.o	\
+	serial.o		\
+	ymodem.o	\
 	main.o		
 
-DEPS = serial_posix.h
-all: emotemonitor-$(VERSION)
+DEPS = serial.h ymodem.h serial_posix.h
+TARGET = serial-$(VERSION)
+all: $(TARGET)
 
 %.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
-emotemonitor-$(VERSION): $(OBJS) 
+$(TARGET): $(OBJS) 
 	$(CC) $(LDFLAGS) -o $@ $(OBJS)
 
 clean:
-	rm -f $(OBJS) emotemonitor
+	rm -f $(OBJS) $(TARGET)
 
 install: all
 	$(INSTALL) -d $(DESTDIR)$(PREFIX)/bin
-	$(INSTALL) -m 755 emotemonitor $(DESTDIR)$(PREFIX)/bin
+	$(INSTALL) -m 755 $(TARGET) $(DESTDIR)$(PREFIX)/bin
 	
 
 .PHONY: all clean install

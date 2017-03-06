@@ -30,6 +30,7 @@ struct serial{
 	int fd;
 	struct termios oldtio;
 	struct termios newtio;
+	char setup_str[11];
 };
 
 typedef struct serial serial_t;
@@ -38,8 +39,7 @@ serial_t *serial_open(const char *device);
 void serial_close(serial_t *h);
 void serial_flush(const serial_t *h);
 int serial_setup(serial_t *h,speed_t port_baud,tcflag_t port_bits,tcflag_t port_parity,tcflag_t port_stop);
-//void serial_it_config(serial_t *h);
-void serial_configinfo(serial_t *h);
+void serial_it_config(serial_t *h);
 int serial_read(const serial_t *h, void *buf,size_t nbyte);
 int serial_write(const serial_t *h, void *buf,size_t nbyte);
 #endif

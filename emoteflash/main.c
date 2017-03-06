@@ -23,6 +23,8 @@
 #include <fcntl.h>
 #include <termios.h>
 #include <stdio.h>
+#include <errno.h>
+#include <string.h>
 
 #include "ymodem.h"
 #include "serial_posix.h"
@@ -51,14 +53,20 @@ void signal_handler_IO (int status)
 static int Serial_ReceiveByte(char* c, int timeout)
 {
 	int ref = 0;
+	int ret = -1;
 
 	if(timeout == -1)
 		ref = 1;
 	while(timeout-- > 0 || ref)
 	{
-		if(SerialGetChar(c)== 1)
+		ret = SerialGetChar(c);	
+		if(ret == -1){  /* read error*/
+			fprintf(stderr, "read serial error, code = %d, %s", errno, strerror(errno));
+		} else if (ret > 0){ /*read success*/
 			return 1;
+		}
 	}
+	/*read timeout*/
 	return 0;
 }
 
@@ -93,7 +101,7 @@ static uint32_t SerialUpload(const char* filename)
 		printf("read file failed...\n");
 	}
 
-
+        /*save time, don't wait to receive 'c'*/
 	// if (Serial_ReceiveByte(&c,-1) == 1&& c==CRC16)
 	{
 		//debug_print("%d",c);	
@@ -137,16 +145,16 @@ int main(int argc, char *argv[])
 	}
 
 	/*Print version information*/
-	printf("Emoteflash stm32 flash progrmming version 1.0.0, COPYRIGHT DNC 2016.\n");
-       
-        /*verify if image file exits or readable */	
+	printf("Emoteflash stm32 flash progrmming version 2.0.0, COPYRIGHT (C) DNC 2016.\n");
+
+	/*verify if image file exits or readable */	
 	fp = fopen(imageFile,"r");
 	if (fp == NULL) {
 		printf("open the image file failed...\n");
 		exit(-1);
 	}
 	fclose(fp);
-        fp = NULL;
+	fp = NULL;
 
 	/*Init serial port*/
 	if (SerialInt(device)<0)
@@ -173,13 +181,13 @@ int main(int argc, char *argv[])
 		if(Serial_ReceiveByte((char *)&recv, 100) == 1)
 			printf("%c",recv);
 		else{
-			
+
 			printf("[%s]ERROR:receive no response from emote and is exiting.\n", PROGRAM_NAME);
 			SerialClose();
 			exit(-1);
 		}
-                
-                /*i++ < 1000; fix the bug when app doesn't restart and print constantly*/
+
+		/*i++ < 1000; fix the bug when app doesn't restart and print constantly*/
 		while(Serial_ReceiveByte((char *)&recv, 1) == 1 && (readings++ < 1000))
 		{
 			printf("%c",recv);
@@ -227,11 +235,11 @@ int main(int argc, char *argv[])
 						}
 					}
 
-                                        
+
 				}
-					SerialClose();
-					return 0;
-                                
+				SerialClose();
+				return 0;
+
 			}
 			else if(SerialPutChar(key)!=1) /*send request again if not responded*/
 			{

@@ -1,3 +1,4 @@
+VERSION = 2.0.0
 PREFIX = /usr/local
 CFLAGS += -Wall -g
 
@@ -13,19 +14,20 @@ OBJS =	serial_posix.o	\
 	main.o		
 
 DEPS = serial.h ymodem.h serial_posix.h
-all: emoteflash
+TARGET = emoteflash-$(VERSION)
+all: $(TARGET)
 
 %.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
-emoteflash: $(OBJS) 
+$(TARGET): $(OBJS) 
 	$(CC) $(LDFLAGS) -o $@ $(OBJS)
 
 clean:
-	rm -f $(OBJS) emoteflash
+	rm -f $(OBJS) $(TARGET)
 
 install: all
 	$(INSTALL) -d $(DESTDIR)$(PREFIX)/bin
-	$(INSTALL) -m 755 emoteflash $(DESTDIR)$(PREFIX)/bin
+	$(INSTALL) -m 755 $(TARGET) $(DESTDIR)$(PREFIX)/bin
 	
 
 .PHONY: all clean install

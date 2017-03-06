@@ -1,6 +1,8 @@
 /*
-   emotemonitor - Open Source emote uart monotor program for *nix
-   Copyright (C) 2016 Ling Wang <lngsa.wang@gmail.com>
+   emotemonitor -- monitor serial port
+   Copyright (C) DNC 2016
+	
+   Author: Ling Wang <lngsa.wang@gmail.com>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -20,115 +22,120 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/time.h>
+#include <fcntl.h>
+#include <termios.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
-#include <unistd.h>
+#include <errno.h>
+#include <string.h>
+#include <sys/time.h>
 
 #include "serial_posix.h"
-#include "serial.h"
+
+
+#define BUFSIZE 256
 
 #define PROGRAM_NAME "EMOTEMONITOR"
 
-bool data_flag = false;
-char buf[256];
-
-FILE* fpin;
-FILE* fpout;
-
-/*
-   static void Serial_ReceiveByte()
-   {
-   char c;
-   if(SerialGetChar(&c)== 1)
-   {
-   fwrite(&c, 1, sizeof(char), fpout);
-   printf("%c", c);
-   }
-   }
- */
-
-void read_serial_data()
-{
-	int bytes;
-	bytes = SerialRead(buf, 256);
-	if (bytes > 0){
-		//fwrite(buf, bytes, sizeof(char), stdout);
-   		fwrite(buf, bytes, sizeof(char), fpout);
-	}else{
-		printf("[%s]%s:read serial data error occured, code = %d\n", PROGRAM_NAME, __func__, bytes);
-		exit(-1);
-	}
-}
-
-
-/* uart interrpt function*/
-void signal_handler_IO (int status)
-{
-	//Serial_ReceiveByte();
-	data_flag = true;
-}
 
 int main(int argc, char *argv[])
 {
-	char* device;
-	char* outfile;
-	struct timeval start, stop;
-	int runtime = 0;
-	int elapsetime = 0;
+	char *device;
+	char *outfile;
+	int minutes;
+	FILE *fp;
+	serial_t *h;
+	int ret;
+	int fd;
+	fd_set fdset;
+	char buf[BUFSIZE];
+	int bytes;
+	struct timeval select_timeout;
+	struct timeval start, current, stop;
 
-	/*Parameters*/    
-	if( argc < 4){
-		printf("[%s]FORMAT: emotemonitor runtime  outfile serialport. \n", PROGRAM_NAME);
+	/* command line arguments */    
+	if (argc < 4){
+		printf("FORMAT: emotemonitor time outfile deviceName.\n");
 		exit(-1);
 	}else{
-		runtime = atoi(argv[1]);
+		minutes = atoi(argv[1]);
 		outfile = argv[2];
 		device = argv[3];
 	}
 
-	/*Print version information*/
-	printf("[%s]emote monitor version 2.0.0, COPYRIGHT (C) DNC 2016.\n", PROGRAM_NAME);
+	/* print version informationi */
+	printf("Emote monitor 3.0.0, COPYRIGHT (C) DNC 2016.\n");
 
-	/*Open input file*/
-
-	/*Open output file*/
-	fpout = fopen(outfile, "wr");
-	if(fpout == NULL)
-	{
-		fclose(fpout);
-		printf("[%s]ERROR:fail to open log file %s.\n", PROGRAM_NAME, outfile);
-		exit(-1);
+	/* open or creat output file */
+	if((fp = fopen(outfile, "w+")) == NULL){
+		fprintf(stderr, "[%s]ERROR: failed open output file %s.\n", PROGRAM_NAME, outfile);
+		return(-1);
 	}
 
-	/*Open serial port*/
-	if(SerialInt(device) < 0)
-	{
-		printf("[%s]ERROR:fail to open serial port %s.\n", PROGRAM_NAME, device);
-		exit(-1);
+	/* open and configure serial port */
+
+	speed_t	port_baud = B115200;   /* 115200 */
+	tcflag_t port_bits = CS8;      /* 8 data bits */
+	tcflag_t port_parity = 0;      /* no parity */
+	tcflag_t port_stop = 0;        /* 1 stop bit */
+
+	h = serial_open(device);
+	if(h == NULL){
+		printf("[%s]ERROR: failed open serial port %s.\n", PROGRAM_NAME, device);
+		return -1;
 	}
 
+	if ( serial_setup(h,port_baud,port_bits,port_parity,port_stop)!= 0 ){
+		printf("[%s]ERROR: failed init serial port %s.\n", PROGRAM_NAME, device);
+		return -1;
+	}
+        /* dump serial port configuration*/
+	printf("[%s]INFO: serial configure info:\n", PROGRAM_NAME);
+	serial_configinfo(h);
+       
+	/* setup select mode reading */
+	fd = h->fd;
+	FD_ZERO(&fdset);
+	FD_SET(fd, &fdset);
 
+       /* monitor serial until timeout*/
+	printf("[%s]INFO: start monitoring serial port %s.\n", PROGRAM_NAME, device);
+	
 	gettimeofday(&start, NULL);
-	while (elapsetime < runtime)
+	stop.tv_sec = start.tv_sec + minutes*60;
+	
+	gettimeofday(&current, NULL);
+	while (current.tv_sec < stop.tv_sec)
 	{
-		if (data_flag == true){
-			data_flag = false;
-			read_serial_data();
+	//	printf("[%s]DEBUG: monitor time left: %d s.\n", PROGRAM_NAME,  (int)(stop.tv_sec - current.tv_sec));
+		select_timeout.tv_sec = 10;
+		select_timeout.tv_usec = 0;	
+		ret = select(fd+1, &fdset, NULL, NULL, &select_timeout);
+	//	printf("[%s]DEBUG: select time stamp: %d s.\n", PROGRAM_NAME,  (int)select_timeout.tv_sec);
+		if( ret > 0 ){
+			bytes = serial_read(h, buf, BUFSIZE-1);
+			if(bytes > 0){
+				buf[bytes] = '\0';
+	//			printf("%s", buf);
+	               		fprintf(fp, "%s", buf);
+			}else{
+				printf("[%s]WARNING: serial read unnormal situation, other process may be reading the same serial.\n", PROGRAM_NAME);
+			}
+		}else if (ret == 0){
+			printf("[%s]INFO: timeout, %s.\n", PROGRAM_NAME, strerror(errno));
+		}else if (ret == -1){
+			printf("[%s]ERROR: serial select.\n", PROGRAM_NAME);
+			serial_close(h);
+			return(-1);
 		}
-		gettimeofday(&stop, NULL);
-		elapsetime = (stop.tv_sec - start.tv_sec)/60;
+		gettimeofday(&current, NULL);
 	}
-
-
-	/*close file and serial device*/
-	fclose(fpout);
-	SerialClose();
-	fpout = NULL;
-
-	printf("[%s]INFO: monitor has finished.\n", PROGRAM_NAME);
-
+	
+	/* close outfile and serial port */
+	printf("[%s]INFO: finished monotoring serial port %s.\n", PROGRAM_NAME, device);
+	serial_close(h);
+	fclose(fp);
+	
 	return 0;
 }
 
